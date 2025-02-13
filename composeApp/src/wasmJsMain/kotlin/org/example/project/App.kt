@@ -9,20 +9,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import io.github.koalaplot.core.bar.BulletGraphs
 import io.github.koalaplot.core.style.KoalaPlotTheme
-import io.github.koalaplot.core.style.KoalaPlotTheme.axis
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.xygraph.FloatLinearAxisModel
 import org.jetbrains.compose.resources.painterResource
 import research_system.composeapp.generated.resources.Res
 import research_system.composeapp.generated.resources.compose_multiplatform
-import kotlin.text.Typography.bullet
 
+@Suppress("ModifierMissing")
 @Composable
 fun App() {
     MaterialTheme {
@@ -42,33 +45,37 @@ fun App() {
     }
 }
 
-
+@Suppress("MagicNumber")
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
-fun GraphSample() {
+fun GraphSample(
+    modifier: Modifier = Modifier,
+) {
     MaterialTheme {
-        Column {
+        Column(
+            modifier = modifier,
+        ) {
             Text(
                 text = "Hello, World!",
             )
-        }
-        BulletGraphs(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            bullet(FloatLinearAxisModel(0f..300f)) {
-                label {
-                    Column(
-                        horizontalAlignment = Alignment.End,
-                        modifier = Modifier.padding(end = KoalaPlotTheme.sizes.gap)
-                    ) {
-                        Text("Revenue 2005 YTD", textAlign = TextAlign.End)
-                        Text("(US $ in thousands)", textAlign = TextAlign.End)
+            BulletGraphs(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                bullet(FloatLinearAxisModel(0f..300f)) {
+                    label {
+                        Column(
+                            horizontalAlignment = Alignment.End,
+                            modifier = Modifier.padding(end = KoalaPlotTheme.sizes.gap),
+                        ) {
+                            Text("Revenue 2005 YTD", textAlign = TextAlign.End)
+                            Text("(US $ in thousands)", textAlign = TextAlign.End)
+                        }
                     }
+                    axis { labels { Text("${it.toInt()}") } }
+                    comparativeMeasure(260f)
+                    featuredMeasureBar(275f)
+                    ranges(0f, 200f, 250f, 300f)
                 }
-                axis { labels { Text("${it.toInt()}") } }
-                comparativeMeasure(260f)
-                featuredMeasureBar(275f)
-                ranges(0f, 200f, 250f, 300f)
             }
         }
     }
