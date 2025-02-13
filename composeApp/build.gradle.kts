@@ -39,7 +39,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("io.github.koalaplot:koalaplot-core:0.8.0")
+            implementation(libs.chart)
         }
     }
 }
