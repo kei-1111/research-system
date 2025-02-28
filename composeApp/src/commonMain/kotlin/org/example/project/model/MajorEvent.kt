@@ -7,5 +7,5 @@ data class MajorEvent(
     val japaneseCalendar: String,
     val name: String,
     val thumbnailImage: DrawableResource,
-    val characteristicWordList: List<String>,
+    val characteristicWordMap: Map<String, String>,
 )

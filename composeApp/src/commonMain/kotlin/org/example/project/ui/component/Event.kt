@@ -1,6 +1,5 @@
 package org.example.project.ui.component
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -9,6 +8,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
@@ -20,6 +20,9 @@ import org.example.project.model.MajorEvent
 @Composable
 fun Event(
     event: MajorEvent,
+    onHover: (Offset, String) -> Unit,
+    onUnHover: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -28,12 +31,11 @@ fun Event(
 //            ↑のようにした背景として、Symbolとして使用するものは、要素を中央揃えにされているからである。
             .offset(y = 75.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
         Symbol(
             shape = MaterialTheme.shapes.small,
             size = 10.dp,
-            fillBrush = SolidColor(Color.Black)
+            fillBrush = SolidColor(Color.Black),
         )
         VerticalDivider(
             modifier = Modifier.height(50.dp),
@@ -41,6 +43,9 @@ fun Event(
         )
         ConnectNodeWithLine(
             event = event,
+            onHover = onHover,
+            onUnHover = onUnHover,
+            onClick = onClick,
         )
     }
 }

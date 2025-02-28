@@ -1,6 +1,7 @@
 package org.example.project.ui.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun EventNode(
     event: MajorEvent,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -25,7 +27,8 @@ fun EventNode(
     ) {
         Column(
             modifier = Modifier
-                .size(100.dp),
+                .size(100.dp)
+                .clickable { onClick() },
         ) {
             Image(
                 painter = painterResource(event.thumbnailImage),

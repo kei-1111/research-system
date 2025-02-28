@@ -18,7 +18,7 @@ fun Circle(
             .size(50.dp)
             .background(
                 color = Color.LightGray,
-                shape = CircleShape
-            )
+                shape = CircleShape,
+            ),
     ) {}
 }

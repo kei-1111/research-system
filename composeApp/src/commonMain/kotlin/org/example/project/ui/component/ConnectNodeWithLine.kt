@@ -7,93 +7,102 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.unit.dp
+import org.example.project.ktx.calcCenterOffset
+import org.example.project.ktx.sumOffset
 import org.example.project.ktx.toPx
 import org.example.project.model.MajorEvent
 
+@Suppress("LongMethod")
 @Composable
 fun ConnectNodeWithLine(
     event: MajorEvent,
+    onHover: (Offset, String) -> Unit,
+    onUnHover: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val eventNodeCenterPositionX = 50.dp.toPx()
-    val eventNodeCenterPositionY = 50.dp.toPx()
+    val eventNodeCenterPosition = Pair(50.dp.toPx(), 50.dp.toPx())
 
-    val characteristicNodeCenterPositionX = 25.dp.toPx()
-    val characteristicNodeCenterPositionY = 25.dp.toPx()
+    val characteristicNodeCenterPosition = Pair(25.dp.toPx(), 25.dp.toPx())
 
     val startPosition by remember {
         mutableStateOf(
             Offset(
-                x = eventNodeCenterPositionX,
-                y = eventNodeCenterPositionY
-            )
+                x = eventNodeCenterPosition.first,
+                y = eventNodeCenterPosition.second,
+            ),
         )
     }
 
+    var globalPosition by remember { mutableStateOf(Offset.Zero) }
+
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .onGloballyPositioned { layoutCoordinates ->
+                globalPosition = Offset(
+                    x = layoutCoordinates.positionInWindow().x,
+                    y = layoutCoordinates.positionInWindow().y,
+                )
+            },
     ) {
-        event.characteristicWordList.forEachIndexed { index, word ->
-            val characteristicNodePositionX = characteristicNodePositionXList[index]
-            val characteristicNodePositionY = characteristicNodePositionYList[index]
-            val characteristicNodePositionXPx = characteristicNodePositionX.toPx()
-            val characteristicNodePositionYPx = characteristicNodePositionY.toPx()
+        event.characteristicWordMap.entries.forEachIndexed { index, (key, value) ->
+            val characteristicNodePosition = characteristicNodePositionList[index]
+            val characteristicNodePositionXPx = characteristicNodePosition.x.dp.toPx()
+            val characteristicNodePositionYPx = characteristicNodePosition.y.dp.toPx()
 
             val endPosition by remember {
                 mutableStateOf(
                     Offset(
-                        x = characteristicNodePositionXPx + characteristicNodeCenterPositionX,
-                        y = characteristicNodePositionYPx + characteristicNodeCenterPositionY
-                    )
+                        x = characteristicNodePositionXPx + characteristicNodeCenterPosition.first,
+                        y = characteristicNodePositionYPx + characteristicNodeCenterPosition.second,
+                    ),
                 )
             }
 
+            val centerPosition by remember { mutableStateOf(calcCenterOffset(startPosition, endPosition)) }
+
             Canvas(
-                modifier = Modifier
+                modifier = Modifier,
             ) {
                 drawLine(
                     color = Color.Black,
                     start = startPosition,
                     end = endPosition,
-                    strokeWidth = 5f
+                    strokeWidth = 5f,
                 )
             }
 
             CharacteristicNode(
-                word = word,
+                word = key,
+                onHover = { onHover(sumOffset(centerPosition, globalPosition), value) },
+                onUnHover = { onUnHover() },
                 modifier = Modifier
-                    .offset(x = characteristicNodePositionX, y = characteristicNodePositionY)
+                    .offset(x = characteristicNodePosition.x.dp, y = characteristicNodePosition.y.dp),
             )
         }
 
         EventNode(
             event = event,
+            onClick = onClick,
         )
     }
 }
 
-private val characteristicNodePositionXList = listOf(
-    75.dp,
-    125.dp,
-    175.dp,
-    125.dp,
-    (-25).dp,
-    (-75).dp,
-    (-125).dp,
-    (-75).dp,
-)
-
-private val characteristicNodePositionYList = listOf(
-    (-100).dp,
-    (-50).dp,
-    0.dp,
-    50.dp,
-    (-100).dp,
-    (-50).dp,
-    0.dp,
-    50.dp,
+@Suppress("MagicNumber")
+private val characteristicNodePositionList = listOf(
+    Offset(75f, -100f),
+    Offset(125f, -50f),
+    Offset(175f, 0f),
+    Offset(125f, 50f),
+    Offset(-25f, -100f),
+    Offset(-75f, -50f),
+    Offset(-125f, 0f),
+    Offset(-75f, 50f),
 )

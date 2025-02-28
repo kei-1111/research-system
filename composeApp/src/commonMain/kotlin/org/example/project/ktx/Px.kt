@@ -5,7 +5,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 
 // .dpは、値をそのままDpに変換してしまうため不適
-//　Floatの拡張関数として定義する
+// 　Floatの拡張関数として定義する
 @Composable
 fun Float.toDp(): Dp {
     val density = LocalDensity.current

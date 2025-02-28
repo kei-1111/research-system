@@ -14,24 +14,25 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import org.example.project.ui.theme.Typography
 
+@Suppress("LongParameterList")
 @Composable
 fun HeadlineLargeText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color. Unspecified,
-    fontSize: TextUnit = TextUnit. Unspecified,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit. Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit. Unspecified,
-    overflow: TextOverflow = TextOverflow. Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
-    maxLines: Int = Int. MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
-    onTextLayout: ((TextLayoutResult) -> Unit)? = null
+    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
     Text(
         text = text,
@@ -54,22 +55,23 @@ fun HeadlineLargeText(
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun HeadlineMediumText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color. Unspecified,
-    fontSize: TextUnit = TextUnit. Unspecified,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit. Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit. Unspecified,
-    overflow: TextOverflow = TextOverflow. Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
-    maxLines: Int = Int. MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
@@ -94,22 +96,23 @@ fun HeadlineMediumText(
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun TitleLargeText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color. Unspecified,
-    fontSize: TextUnit = TextUnit. Unspecified,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit. Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit. Unspecified,
-    overflow: TextOverflow = TextOverflow. Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
-    maxLines: Int = Int. MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
@@ -134,22 +137,23 @@ fun TitleLargeText(
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun TitleMediumText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color. Unspecified,
-    fontSize: TextUnit = TextUnit. Unspecified,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit. Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit. Unspecified,
-    overflow: TextOverflow = TextOverflow. Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
-    maxLines: Int = Int. MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
@@ -174,22 +178,23 @@ fun TitleMediumText(
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun BodyMediumText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color. Unspecified,
-    fontSize: TextUnit = TextUnit. Unspecified,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit. Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit. Unspecified,
-    overflow: TextOverflow = TextOverflow. Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
-    maxLines: Int = Int. MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
@@ -214,22 +219,23 @@ fun BodyMediumText(
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun BodySmallText(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = Color. Unspecified,
-    fontSize: TextUnit = TextUnit. Unspecified,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit. Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit. Unspecified,
-    overflow: TextOverflow = TextOverflow. Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
-    maxLines: Int = Int. MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
 ) {
@@ -253,4 +259,3 @@ fun BodySmallText(
         style = Typography().bodySmall,
     )
 }
-
