@@ -49,6 +49,7 @@ fun EventNode(
             BodyMediumText(
                 text = event.name,
                 modifier = Modifier.fillMaxWidth(),
+                color = eventColor.content,
                 textAlign = TextAlign.Center,
             )
         }
