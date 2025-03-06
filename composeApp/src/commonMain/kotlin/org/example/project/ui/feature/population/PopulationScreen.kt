@@ -44,10 +44,9 @@ import org.example.project.data.zenikamesawamuraMerger
 import org.example.project.ktx.toDp
 import org.example.project.model.MajorEvent
 import org.example.project.ui.base.LocalData
-import org.example.project.ui.component.BodySmallText
 import org.example.project.ui.component.Event
 import org.example.project.ui.component.EventAttachPosition
-import org.example.project.ui.component.TitleMediumText
+import org.example.project.ui.component.LabelMediumText
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
 import org.koin.compose.koinInject
@@ -99,7 +98,6 @@ private fun PopulationScreen(
         ChartLayout(
             modifier = Modifier
                 .padding(Paddings.Small),
-            title = { TitleMediumText("歴史的出来事可視化システム") },
         ) {
             XYGraph(
                 xAxisModel = IntLinearAxisModel(data.minOf { it.x } ..data.maxOf { it.x }),
@@ -138,7 +136,7 @@ private fun PopulationScreen(
                         .offset(x = it.offset.x.toDp(), y = it.offset.y.toDp()),
                     shape = MaterialTheme.shapes.medium,
                 ) {
-                    BodySmallText(
+                    LabelMediumText(
                         text = it.exception,
                         modifier = Modifier.padding(Paddings.Small),
                     )
@@ -152,7 +150,7 @@ private fun PopulationScreen(
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    BodySmallText(
+                    LabelMediumText(
                         text = "Clicked",
                         modifier = Modifier.padding(Paddings.Small),
                     )

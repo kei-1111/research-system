@@ -1,5 +1,6 @@
 package org.example.project.ui.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.example.project.model.MajorEvent
+import org.example.project.ui.theme.LocalEventColor
 import org.example.project.ui.theme.Shapes
 import org.jetbrains.compose.resources.painterResource
 
@@ -21,9 +23,15 @@ fun EventNode(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val eventColor = LocalEventColor.current
+
     Surface(
         modifier = modifier,
         shape = Shapes.medium,
+        border = BorderStroke(
+            width = 1.dp,
+            color = eventColor.emphasis,
+        ),
     ) {
         Column(
             modifier = Modifier

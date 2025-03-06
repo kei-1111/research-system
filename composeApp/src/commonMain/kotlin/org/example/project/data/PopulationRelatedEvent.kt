@@ -1,6 +1,7 @@
 package org.example.project.data
 
 import org.example.project.model.MajorEvent
+import org.example.project.model.PopulationEventType
 import research_system.composeapp.generated.resources.Res
 import research_system.composeapp.generated.resources.hakodate_air_raid_thumbnail
 import research_system.composeapp.generated.resources.kamedasi_merger_thumbnail
@@ -14,6 +15,7 @@ import research_system.composeapp.generated.resources.zenikamesawamura_merger_th
 val meiji40BigFire = MajorEvent(
     gregorianCalender = 1907,
     japaneseCalendar = "明治40年",
+    eventType = PopulationEventType.BigFire,
     name = "明治40年大火",
     characteristicWordMap = mapOf(
         "明治40年" to "明治40年8月25日午後10時20分東川町217番地より出火した",
@@ -38,6 +40,7 @@ val meiji40BigFire = MajorEvent(
 val taisyo5BigFire = MajorEvent(
     gregorianCalender = 1916,
     japaneseCalendar = "大正5年",
+    eventType = PopulationEventType.BigFire,
     name = "大正5年大火",
     characteristicWordMap = mapOf(
         "大正5年" to "",
@@ -63,6 +66,7 @@ val taisyo5BigFire = MajorEvent(
 val syowa9BigFire = MajorEvent(
     gregorianCalender = 1934,
     japaneseCalendar = "昭和9年",
+    eventType = PopulationEventType.BigFire,
     name = "昭和9年大火",
     characteristicWordMap = mapOf(
         "昭和9年" to "昭和9年3月21日午後6時53分",
@@ -87,6 +91,7 @@ val syowa9BigFire = MajorEvent(
 val yukawachoMerger = MajorEvent(
     gregorianCalender = 1939,
     japaneseCalendar = "昭和14年",
+    eventType = PopulationEventType.Merger,
     name = "湯川町合併",
     characteristicWordMap = mapOf(
         "合併" to "合併調査開始以来紆余曲折を経て",
@@ -116,6 +121,7 @@ val yukawachoMerger = MajorEvent(
 val hakodateAirRaid = MajorEvent(
     gregorianCalender = 1945,
     japaneseCalendar = "昭和20年",
+    eventType = PopulationEventType.AirRaid,
     name = "函館空襲",
     characteristicWordMap = mapOf(
         "函館空襲" to "",
@@ -164,6 +170,7 @@ val hakodateAirRaid = MajorEvent(
 val toyamaruTyphoon = MajorEvent(
     gregorianCalender = 1954,
     japaneseCalendar = "昭和29年",
+    eventType = PopulationEventType.Typhoon,
     name = "洞爺丸台風",
     characteristicWordMap = mapOf(
         "洞爺丸台風" to "洞爺丸台風ともいわれるが",
@@ -203,6 +210,7 @@ val toyamaruTyphoon = MajorEvent(
 val zenikamesawamuraMerger = MajorEvent(
     gregorianCalender = 1966,
     japaneseCalendar = "昭和41年",
+    eventType = PopulationEventType.Merger,
     name = "銭亀沢村合併",
     characteristicWordMap = mapOf(
         "銭亀沢村" to "全国的に市町村合併が促進された昭和28年から29年にかけても銭亀沢村との合併はあまり話題にならなかった",
@@ -232,6 +240,7 @@ val zenikamesawamuraMerger = MajorEvent(
 val kamedasiMerger = MajorEvent(
     gregorianCalender = 1973,
     japaneseCalendar = "昭和48年",
+    eventType = PopulationEventType.Merger,
     name = "亀田市合併",
     characteristicWordMap = mapOf(
         "亀田市" to "5月15日から臨時亀田市議会が開かれ",

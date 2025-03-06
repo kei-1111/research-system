@@ -5,6 +5,7 @@ import org.jetbrains.compose.resources.DrawableResource
 data class MajorEvent(
     val gregorianCalender: Int,
     val japaneseCalendar: String,
+    val eventType: EventType,
     val name: String,
     val characteristicWordMap: Map<String, String>,
     val exception: String,

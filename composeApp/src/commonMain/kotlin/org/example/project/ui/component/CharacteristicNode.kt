@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import org.example.project.ui.theme.LocalEventColor
 
 @Composable
 fun CharacteristicNode(
@@ -18,6 +19,8 @@ fun CharacteristicNode(
     onUnHover: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val eventColor = LocalEventColor.current
+
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
@@ -32,10 +35,13 @@ fun CharacteristicNode(
             .hoverable(interactionSource = interactionSource),
         contentAlignment = Alignment.Center,
     ) {
-        Circle()
-        BodySmallText(
+        Circle(
+            color = eventColor.base,
+        )
+        LabelMediumText(
             text = word,
             textAlign = TextAlign.Center,
+            color = eventColor.content,
         )
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.unit.dp
@@ -18,6 +17,7 @@ import org.example.project.ktx.calcCenterOffset
 import org.example.project.ktx.sumOffset
 import org.example.project.ktx.toPx
 import org.example.project.model.MajorEvent
+import org.example.project.ui.theme.LocalEventColor
 
 @Suppress("LongMethod")
 @Composable
@@ -28,6 +28,8 @@ fun ConnectNodeWithLine(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val eventColor = LocalEventColor.current
+
     val eventNodeCenterPosition = Pair(50.dp.toPx(), 50.dp.toPx())
 
     val characteristicNodeCenterPosition = Pair(25.dp.toPx(), 25.dp.toPx())
@@ -72,7 +74,7 @@ fun ConnectNodeWithLine(
                 modifier = Modifier,
             ) {
                 drawLine(
-                    color = Color.Black,
+                    color = eventColor.content,
                     start = startPosition,
                     end = endPosition,
                     strokeWidth = 5f,

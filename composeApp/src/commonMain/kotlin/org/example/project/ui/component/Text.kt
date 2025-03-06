@@ -221,7 +221,7 @@ fun BodyMediumText(
 
 @Suppress("LongParameterList")
 @Composable
-fun BodySmallText(
+fun LabelMediumText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -256,6 +256,6 @@ fun BodySmallText(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = Typography().bodySmall,
+        style = Typography().labelMedium,
     )
 }

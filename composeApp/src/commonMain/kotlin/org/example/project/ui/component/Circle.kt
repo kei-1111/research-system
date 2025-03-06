@@ -11,13 +11,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Circle(
+    color: Color,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .size(50.dp)
             .background(
-                color = Color.LightGray,
+                color = color,
                 shape = CircleShape,
             ),
     ) {}

@@ -59,18 +59,18 @@ fun Typography() = Typography(
             trim = LineHeightStyle.Trim.Both,
         ),
     ),
-    bodySmall = TextStyle(
+    labelLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Medium,
+        fontSize = 22.sp,
+    ),
+    labelMedium = TextStyle(
+        fontFamily = NotoSansJpFamily(),
+        fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
             trim = LineHeightStyle.Trim.Both,
         ),
-    ),
-    labelLarge = TextStyle(
-        fontFamily = NotoSansJpFamily(),
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
     ),
 )

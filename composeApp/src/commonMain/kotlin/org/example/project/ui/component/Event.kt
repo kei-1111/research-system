@@ -6,16 +6,18 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.koalaplot.core.Symbol
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import org.example.project.model.MajorEvent
+import org.example.project.ui.theme.LocalEventColor
+import org.example.project.ui.theme.getEventColor
 
 @Suppress("LongParameterList")
 @Composable
@@ -28,26 +30,30 @@ fun Event(
     modifier: Modifier = Modifier,
     leaderLineHeight: Dp = 50.dp,
 ) {
-    when (eventAttachPosition) {
-        EventAttachPosition.Top -> {
-            EventAttachTop(
-                event = event,
-                onHover = onHover,
-                onUnHover = onUnHover,
-                onClick = onClick,
-                modifier = modifier,
-                leaderLineHeight = leaderLineHeight,
-            )
-        }
-        EventAttachPosition.Bottom -> {
-            EventAttachBottom(
-                event = event,
-                onHover = onHover,
-                onUnHover = onUnHover,
-                onClick = onClick,
-                modifier = modifier,
-                leaderLineHeight = leaderLineHeight,
-            )
+    val eventColor = getEventColor(event.eventType)
+
+    CompositionLocalProvider(LocalEventColor provides eventColor) {
+        when (eventAttachPosition) {
+            EventAttachPosition.Top -> {
+                EventAttachTop(
+                    event = event,
+                    onHover = onHover,
+                    onUnHover = onUnHover,
+                    onClick = onClick,
+                    modifier = modifier,
+                    leaderLineHeight = leaderLineHeight,
+                )
+            }
+            EventAttachPosition.Bottom -> {
+                EventAttachBottom(
+                    event = event,
+                    onHover = onHover,
+                    onUnHover = onUnHover,
+                    onClick = onClick,
+                    modifier = modifier,
+                    leaderLineHeight = leaderLineHeight,
+                )
+            }
         }
     }
 }
@@ -67,6 +73,8 @@ fun EventAttachTop(
     modifier: Modifier = Modifier,
     leaderLineHeight: Dp = 50.dp,
 ) {
+    val eventColor = LocalEventColor.current
+
     Column(
         modifier = modifier
 //            yの値は、EventNodeの高さ（100.dp）と、引出線の長さ（50.dp）と、Symbolの高さ（10.dp）をすべて足し合わせて、2で割り、Symbolをグラフの線に合わせるために5.dpを足した値
@@ -84,11 +92,12 @@ fun EventAttachTop(
         VerticalDivider(
             modifier = Modifier.height(leaderLineHeight),
             thickness = 4.dp,
+            color = eventColor.base,
         )
         Symbol(
             shape = MaterialTheme.shapes.small,
             size = 10.dp,
-            fillBrush = SolidColor(Color.Black),
+            fillBrush = SolidColor(eventColor.emphasis),
         )
     }
 }
@@ -104,6 +113,8 @@ fun EventAttachBottom(
     modifier: Modifier = Modifier,
     leaderLineHeight: Dp = 50.dp,
 ) {
+    val eventColor = LocalEventColor.current
+
     Column(
         modifier = modifier
 //            yの値は、EventNodeの高さ（100.dp）と、引出線の長さ（50.dp）と、Symbolの高さ（10.dp）をすべて足し合わせて、2で割り、Symbolをグラフの線に合わせるために5.dpを引いた値
@@ -115,11 +126,12 @@ fun EventAttachBottom(
         Symbol(
             shape = MaterialTheme.shapes.small,
             size = 10.dp,
-            fillBrush = SolidColor(Color.Black),
+            fillBrush = SolidColor(eventColor.emphasis),
         )
         VerticalDivider(
             modifier = Modifier.height(leaderLineHeight),
             thickness = 4.dp,
+            color = eventColor.base,
         )
         ConnectNodeWithLine(
             event = event,
