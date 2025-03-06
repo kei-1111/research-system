@@ -6,6 +6,10 @@ data class MajorEvent(
     val gregorianCalender: Int,
     val japaneseCalendar: String,
     val name: String,
-    val thumbnailImage: DrawableResource,
     val characteristicWordMap: Map<String, String>,
+    val exception: String,
+    val thumbnailImage: DrawableResource,
+    val mapImage: DrawableResource?,
+    val photoImage: DrawableResource?,
+    val postcardImage: DrawableResource?,
 )

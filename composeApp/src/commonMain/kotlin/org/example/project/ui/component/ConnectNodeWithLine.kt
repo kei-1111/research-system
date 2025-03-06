@@ -95,7 +95,7 @@ fun ConnectNodeWithLine(
     }
 }
 
-//中心分の座標が左上に寄っているため、中心分を加算して中心にする
+// 中心分の座標が左上に寄っているため、中心分を加算して中心にする
 @Suppress("MagicNumber")
 private val characteristicNodePositionList = listOf(
     Offset(75f, -70f),

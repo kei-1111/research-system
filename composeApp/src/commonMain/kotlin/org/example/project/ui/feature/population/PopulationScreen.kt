@@ -5,6 +5,7 @@ package org.example.project.ui.feature.population
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,12 +32,21 @@ import io.github.koalaplot.core.xygraph.IntLinearAxisModel
 import io.github.koalaplot.core.xygraph.XYGraph
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.example.project.data.hakodateAirRaid
+import org.example.project.data.kamedasiMerger
 import org.example.project.data.meiji40BigFire
+import org.example.project.data.syowa9BigFire
+import org.example.project.data.taisyo5BigFire
 import org.example.project.data.totalPopulation
+import org.example.project.data.toyamaruTyphoon
+import org.example.project.data.yukawachoMerger
+import org.example.project.data.zenikamesawamuraMerger
 import org.example.project.ktx.toDp
+import org.example.project.model.MajorEvent
 import org.example.project.ui.base.LocalData
 import org.example.project.ui.component.BodySmallText
 import org.example.project.ui.component.Event
+import org.example.project.ui.component.EventAttachPosition
 import org.example.project.ui.component.TitleMediumText
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
@@ -100,38 +111,20 @@ private fun PopulationScreen(
             ) {
                 AreaPlot(
                     data = data,
-                    lineStyle = LineStyle(brush = SolidColor(Color(0xFF37A78F)), strokeWidth = 2.dp),
+                    lineStyle = LineStyle(
+                        brush = SolidColor(Color(0xFF37A78F)),
+                        strokeWidth = 2.dp,
+                    ),
                     areaStyle = AreaStyle(
                         brush = SolidColor(Color(0xFF37A78F)),
                         alpha = 0.5f,
                     ),
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     symbol = { point ->
-                        if (point.x == meiji40BigFire.gregorianCalender) {
-                            Event(
-                                event = meiji40BigFire,
-                                onHover = { offset, exception ->
-                                    onEvent(
-                                        PopulationUiEvent.OnCharacteristicNodeHovered(
-                                            offset,
-                                            exception,
-                                        ),
-                                    )
-                                },
-                                onUnHover = { onEvent(PopulationUiEvent.OnCharacteristicNodeUnHovered) },
-                                onClick = {
-                                    onEvent(
-                                        PopulationUiEvent.OnEventNodeClicked(
-                                            meiji40BigFire,
-                                        ),
-                                    )
-                                },
-                            )
-                        } else {
-                            Symbol(
-                                modifier = Modifier,
-                            )
-                        }
+                        DisplayEventNode(
+                            gregorianCalender = point.x,
+                            onEvent = onEvent,
+                        )
                     },
                 )
             }
@@ -141,6 +134,7 @@ private fun PopulationScreen(
             uiState.characteristicNodeException?.let {
                 Surface(
                     modifier = Modifier
+                        .sizeIn(maxWidth = 250.dp)
                         .offset(x = it.offset.x.toDp(), y = it.offset.y.toDp()),
                     shape = MaterialTheme.shapes.medium,
                 ) {
@@ -166,6 +160,118 @@ private fun PopulationScreen(
             }
         }
     }
+}
+
+@Suppress("LongMethod")
+@OptIn(ExperimentalKoalaPlotApi::class)
+@Composable
+private fun DisplayEventNode(
+    gregorianCalender: Int,
+    onEvent: (PopulationUiEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (gregorianCalender) {
+        meiji40BigFire.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = meiji40BigFire,
+                eventAttachPosition = EventAttachPosition.Bottom,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
+
+        taisyo5BigFire.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = taisyo5BigFire,
+                eventAttachPosition = EventAttachPosition.Top,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
+
+        syowa9BigFire.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = syowa9BigFire,
+                eventAttachPosition = EventAttachPosition.Bottom,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
+
+        yukawachoMerger.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = yukawachoMerger,
+                eventAttachPosition = EventAttachPosition.Top,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
+
+        hakodateAirRaid.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = hakodateAirRaid,
+                eventAttachPosition = EventAttachPosition.Bottom,
+                onEvent = onEvent,
+                modifier = modifier,
+                leaderLineHeight = 250.dp,
+            )
+        }
+
+        zenikamesawamuraMerger.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = zenikamesawamuraMerger,
+                eventAttachPosition = EventAttachPosition.Bottom,
+                onEvent = onEvent,
+                modifier = modifier,
+                leaderLineHeight = 150.dp,
+            )
+        }
+
+        toyamaruTyphoon.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = toyamaruTyphoon,
+                eventAttachPosition = EventAttachPosition.Top,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
+
+        kamedasiMerger.gregorianCalender -> {
+            PopulationRelatedEvent(
+                event = kamedasiMerger,
+                eventAttachPosition = EventAttachPosition.Bottom,
+                onEvent = onEvent,
+                modifier = modifier,
+            )
+        }
+
+        else -> {
+            Symbol(
+                modifier = Modifier,
+            )
+        }
+    }
+}
+
+@Composable
+private fun PopulationRelatedEvent(
+    event: MajorEvent,
+    eventAttachPosition: EventAttachPosition,
+    onEvent: (PopulationUiEvent) -> Unit,
+    modifier: Modifier = Modifier,
+    leaderLineHeight: Dp = 50.dp,
+) {
+    Event(
+        event = event,
+        eventAttachPosition = eventAttachPosition,
+        onHover = { offset, exception ->
+            onEvent(PopulationUiEvent.OnCharacteristicNodeHovered(offset, exception))
+        },
+        onUnHover = { onEvent(PopulationUiEvent.OnCharacteristicNodeUnHovered) },
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(event)) },
+        modifier = modifier,
+        leaderLineHeight = leaderLineHeight,
+    )
 }
 
 private const val Meiji5 = 1872
