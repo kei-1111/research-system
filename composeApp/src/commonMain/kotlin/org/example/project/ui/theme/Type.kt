@@ -11,8 +11,8 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
 import research_system.composeapp.generated.resources.Res
+import research_system.composeapp.generated.resources.noto_sans_jp_bold
 import research_system.composeapp.generated.resources.noto_sans_jp_medium
-import research_system.composeapp.generated.resources.noto_sans_jp_semi_bold
 
 @Composable
 fun NotoSansJpFamily() = FontFamily(
@@ -21,8 +21,8 @@ fun NotoSansJpFamily() = FontFamily(
         weight = FontWeight.Medium,
     ),
     Font(
-        resource = Res.font.noto_sans_jp_semi_bold,
-        weight = FontWeight.SemiBold,
+        resource = Res.font.noto_sans_jp_bold,
+        weight = FontWeight.Bold,
     ),
 )
 
@@ -30,19 +30,19 @@ fun NotoSansJpFamily() = FontFamily(
 fun Typography() = Typography(
     headlineLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 48.sp,
         lineHeight = 52.sp,
     ),
     headlineMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
         lineHeight = 40.sp,
     ),
     titleLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
     ),
     titleMedium = TextStyle(
@@ -53,7 +53,7 @@ fun Typography() = Typography(
     bodyMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
             trim = LineHeightStyle.Trim.Both,
@@ -66,7 +66,7 @@ fun Typography() = Typography(
     ),
     labelMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
