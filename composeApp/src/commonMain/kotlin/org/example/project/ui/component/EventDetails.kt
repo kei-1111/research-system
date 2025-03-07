@@ -46,13 +46,13 @@ fun EventDetails(
             modifier = Modifier
                 .padding(
                     horizontal = 200.dp,
-                    vertical = 100.dp
+                    vertical = 100.dp,
                 ),
             shape = Shapes.medium,
             border = BorderStroke(
                 width = 2.dp,
                 color = eventColor.emphasis,
-            )
+            ),
         ) {
             Column(
                 modifier = Modifier
@@ -89,7 +89,7 @@ private fun EventHeader(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier.width(IntrinsicSize.Max)
+        modifier = modifier.width(IntrinsicSize.Max),
     ) {
         HeadlineMediumText(
             text = name,
@@ -100,7 +100,7 @@ private fun EventHeader(
                 .fillMaxWidth()
                 .clip(Shapes.medium),
             color = dividerColor,
-            thickness = 5.dp
+            thickness = 5.dp,
         )
     }
 }
@@ -109,8 +109,8 @@ private fun EventHeader(
 private fun EventDetailsSection(
     title: String,
     textColor: Color,
-    content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier,

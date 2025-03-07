@@ -151,7 +151,7 @@ private fun PopulationScreen(
                 EventDetails(
                     event = it,
                     onDismiss = { onEvent(PopulationUiEvent.OnEventNodeDetailsDismissed) },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }

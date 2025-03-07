@@ -13,5 +13,5 @@ fun Background(
     Surface(
         modifier = modifier,
         color = color,
-    ) {  }
+    ) { }
 }

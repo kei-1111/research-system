@@ -260,7 +260,6 @@ fun LabelLargeText(
     )
 }
 
-
 @Suppress("LongParameterList")
 @Composable
 fun LabelMediumText(
