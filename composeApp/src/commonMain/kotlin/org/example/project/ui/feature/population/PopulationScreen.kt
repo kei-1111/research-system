@@ -46,6 +46,7 @@ import org.example.project.model.MajorEvent
 import org.example.project.ui.base.LocalData
 import org.example.project.ui.component.Event
 import org.example.project.ui.component.EventAttachPosition
+import org.example.project.ui.component.EventDetails
 import org.example.project.ui.component.LabelMediumText
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
@@ -70,6 +71,7 @@ fun PopulationScreen() {
                 )
                 is PopulationUiEvent.OnCharacteristicNodeUnHovered -> viewModel.onCharacteristicNodeUnHovered()
                 is PopulationUiEvent.OnEventNodeClicked -> viewModel.onEventNodeClicked(event.clickedEvent)
+                is PopulationUiEvent.OnEventNodeDetailsDismissed -> viewModel.onEventNodeDetailsDismissed()
             }
         }.launchIn(this)
     }
@@ -146,15 +148,11 @@ private fun PopulationScreen(
 
         if (uiState.isShowEventNodeDetails) {
             uiState.showingEventNode?.let {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                ) {
-                    LabelMediumText(
-                        text = "Clicked",
-                        modifier = Modifier.padding(Paddings.Small),
-                    )
-                }
+                EventDetails(
+                    event = it,
+                    onDismiss = { onEvent(PopulationUiEvent.OnEventNodeDetailsDismissed) },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }

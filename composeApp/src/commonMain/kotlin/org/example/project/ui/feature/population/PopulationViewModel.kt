@@ -41,4 +41,13 @@ class PopulationViewModel : BaseViewModel<PopulationUiState, PopulationUiEvent>(
             )
         }
     }
+
+    fun onEventNodeDetailsDismissed() {
+        updateUiState {
+            it.copy(
+                isShowEventNodeDetails = false,
+                showingEventNode = null,
+            )
+        }
+    }
 }

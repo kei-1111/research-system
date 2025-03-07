@@ -53,7 +53,7 @@ fun Typography() = Typography(
     bodyMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
             trim = LineHeightStyle.Trim.Both,
@@ -61,8 +61,12 @@ fun Typography() = Typography(
     ),
     labelLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Top,
+            trim = LineHeightStyle.Trim.Both,
+        ),
     ),
     labelMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),

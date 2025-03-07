@@ -8,4 +8,5 @@ sealed interface PopulationUiEvent : UiEvent {
     data class OnCharacteristicNodeHovered(val offset: Offset, val exception: String) : PopulationUiEvent
     data object OnCharacteristicNodeUnHovered : PopulationUiEvent
     data class OnEventNodeClicked(val clickedEvent: MajorEvent) : PopulationUiEvent
+    data object OnEventNodeDetailsDismissed : PopulationUiEvent
 }

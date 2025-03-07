@@ -10,7 +10,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.example.project.model.MajorEvent
@@ -47,12 +46,11 @@ fun EventNode(
                     .weight(1f),
                 contentScale = ContentScale.Crop,
             )
-            BodyMediumText(
+            LabelLargeText(
                 text = event.name,
                 modifier = Modifier.fillMaxWidth(),
                 color = eventColor.content,
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold,
             )
         }
     }
