@@ -229,6 +229,7 @@ private fun DisplayEventNode(
                 eventAttachPosition = EventAttachPosition.Top,
                 onEvent = onEvent,
                 modifier = modifier,
+                leaderLineHeight = 100.dp,
             )
         }
 

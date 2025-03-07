@@ -100,12 +100,12 @@ fun ConnectNodeWithLine(
 // 中心分の座標が左上に寄っているため、中心分を加算して中心にする
 @Suppress("MagicNumber")
 private val characteristicNodePositionList = listOf(
-    Offset(75f, -70f),
-    Offset(125f, -35f),
-    Offset(125f, 35f),
-    Offset(100f, 100f),
-    Offset(-25f, -70f),
-    Offset(-75f, -35f),
-    Offset(-75f, 35f),
-    Offset(-50f, 100f),
+    Offset(60f, -70f),
+    Offset(110f, -35f),
+    Offset(110f, 35f),
+    Offset(70f, 110f),
+    Offset(-10f, -70f),
+    Offset(-60f, -35f),
+    Offset(-60f, 35f),
+    Offset(-20f, 110f),
 )
