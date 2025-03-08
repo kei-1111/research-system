@@ -1,15 +1,42 @@
 package org.example.project.data
 
+import kotlinx.collections.immutable.persistentMapOf
 import org.example.project.model.MajorEvent
 import org.example.project.model.PopulationEventType
 import research_system.composeapp.generated.resources.Res
+import research_system.composeapp.generated.resources.hakodate_air_raid_photo_image1
 import research_system.composeapp.generated.resources.hakodate_air_raid_thumbnail
+import research_system.composeapp.generated.resources.kamedasi_merger_photo_image1
 import research_system.composeapp.generated.resources.kamedasi_merger_thumbnail
+import research_system.composeapp.generated.resources.meiji40_big_fire_photo_image1
+import research_system.composeapp.generated.resources.meiji40_big_fire_photo_image2
+import research_system.composeapp.generated.resources.meiji40_big_fire_photo_image3
+import research_system.composeapp.generated.resources.meiji40_big_fire_postcard_image1
+import research_system.composeapp.generated.resources.meiji40_big_fire_postcard_image2
 import research_system.composeapp.generated.resources.meiji40_big_fire_thumbnail
+import research_system.composeapp.generated.resources.syowa9_big_fire_map_image1
+import research_system.composeapp.generated.resources.syowa9_big_fire_map_image2
+import research_system.composeapp.generated.resources.syowa9_big_fire_photo_image1
+import research_system.composeapp.generated.resources.syowa9_big_fire_photo_image2
+import research_system.composeapp.generated.resources.syowa9_big_fire_photo_image3
+import research_system.composeapp.generated.resources.syowa9_big_fire_postcard_image1
+import research_system.composeapp.generated.resources.syowa9_big_fire_postcard_image2
 import research_system.composeapp.generated.resources.syowa9_big_fire_thumbnail
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image1
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image2
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image3
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image4
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image5
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image6
+import research_system.composeapp.generated.resources.taisyo5_big_fire_postcard_image7
 import research_system.composeapp.generated.resources.taisyo5_big_fire_thumbnail
+import research_system.composeapp.generated.resources.toyamaru_typhoon_photo_image1
+import research_system.composeapp.generated.resources.toyamaru_typhoon_postcard_image1
+import research_system.composeapp.generated.resources.toyamaru_typhoon_postcard_image2
 import research_system.composeapp.generated.resources.toyamaru_typhoon_thumbnail
+import research_system.composeapp.generated.resources.yukawacho_merger_photo_image1
 import research_system.composeapp.generated.resources.yukawacho_merger_thumbnail
+import research_system.composeapp.generated.resources.zenikamesawamura_merger_photo_image1
 import research_system.composeapp.generated.resources.zenikamesawamura_merger_thumbnail
 
 val meiji40BigFire = MajorEvent(
@@ -17,7 +44,7 @@ val meiji40BigFire = MajorEvent(
     japaneseCalendar = "明治40年",
     eventType = PopulationEventType.BigFire,
     name = "明治40年大火",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "明治40年" to "明治40年8月25日午後10時20分東川町217番地より出火した",
         "大火" to "負傷者1000名を出してこの大火は翌26日午前9時頃にやっと鎮火した（『函館大火史』）",
         "水源\n枯渇" to "不幸にも水源が枯渇し日々の用水にも欠乏していたため消火栓の効力が少なく",
@@ -32,9 +59,16 @@ val meiji40BigFire = MajorEvent(
             この大火の様子を当時の新聞は、「丁度火事の當日は畜産共進會やら競馬やらで函館全市近来無比の大賑わひの最中で、中にも競馬に關係ある函館資産家の多数は勝祝ひやら負祝ひやらで各料理店とも笛や太鼓の大陽氣な眞最中、ソレ火事だといふが早いか今の時まで臥牛山下の平穏無事な陽氣な天地は、一瞬時にして忽ち阿鼻叫喚の焦熱地獄を演出して、時間から云へば僅かに三四時間ならぬ間に日本五港の一たる函館港を全滅に近きまで焼き盡した。今度の火事は實に安政の地震の時に江戸市中を燒き沸つたといふ江戸大火以來の大火かと思われます」（明治40年8月30日付「北タイ」）と伝えている。
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.meiji40_big_fire_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = persistentMapOf(
+        Res.drawable.meiji40_big_fire_photo_image1 to "https://archives.c.fun.ac.jp/photos/gl000123/0001",
+        Res.drawable.meiji40_big_fire_photo_image2 to "https://archives.c.fun.ac.jp/photos/gl000124/0001",
+        Res.drawable.meiji40_big_fire_photo_image3 to "https://archives.c.fun.ac.jp/photos/gl000124/0001",
+    ),
+    postcardImages = persistentMapOf(
+        Res.drawable.meiji40_big_fire_postcard_image1 to "https://archives.c.fun.ac.jp/postcards/pc000762/0001",
+        Res.drawable.meiji40_big_fire_postcard_image2 to "https://archives.c.fun.ac.jp/postcards/pc000762/0002",
+    ),
 )
 
 val taisyo5BigFire = MajorEvent(
@@ -42,7 +76,7 @@ val taisyo5BigFire = MajorEvent(
     japaneseCalendar = "大正5年",
     eventType = PopulationEventType.BigFire,
     name = "大正5年大火",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "大正5年" to "",
         "大火" to "4時間後にようやく鎮火し10年ぶりの大火となる",
         "焼失" to "水道断水中もあって942棟1763戸を焼失する",
@@ -58,9 +92,17 @@ val taisyo5BigFire = MajorEvent(
             電車の十字街・地蔵町・鶴岡町・停車場前・大門前間と十字街・鶴岡町・真砂町・停車場前・若松橋間は5日まで運転が休止される
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.taisyo5_big_fire_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = null,
+    postcardImages = persistentMapOf(
+        Res.drawable.taisyo5_big_fire_postcard_image1 to "https://archives.c.fun.ac.jp/postcards/pc000759/0001",
+        Res.drawable.taisyo5_big_fire_postcard_image2 to "https://archives.c.fun.ac.jp/postcards/pc000759/0002",
+        Res.drawable.taisyo5_big_fire_postcard_image3 to "https://archives.c.fun.ac.jp/postcards/pc000759/0003",
+        Res.drawable.taisyo5_big_fire_postcard_image4 to "https://archives.c.fun.ac.jp/postcards/pc000759/0004",
+        Res.drawable.taisyo5_big_fire_postcard_image5 to "https://archives.c.fun.ac.jp/postcards/pc000759/0005",
+        Res.drawable.taisyo5_big_fire_postcard_image6 to "https://archives.c.fun.ac.jp/postcards/pc000759/0006",
+        Res.drawable.taisyo5_big_fire_postcard_image7 to "https://archives.c.fun.ac.jp/postcards/pc000759/0007",
+    ),
 )
 
 val syowa9BigFire = MajorEvent(
@@ -68,7 +110,7 @@ val syowa9BigFire = MajorEvent(
     japaneseCalendar = "昭和9年",
     eventType = PopulationEventType.BigFire,
     name = "昭和9年大火",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "昭和9年" to "昭和9年3月21日午後6時53分",
         "大火" to "大火の被害が大きかった原因を",
         "防火地区" to "五．防火地区極めて尠く",
@@ -83,9 +125,20 @@ val syowa9BigFire = MajorEvent(
             大火の被害が大きかった原因を、当時の建築学会による報告書は、「一．発火より消防署に於て知覚するまでに約五分を要したこと、二．風力甚大で火災の伝播速度大且飛火多く尚風向の旋転方向亦最悪的であった事、三．火元付近は特に地形の関係に依り延焼中頻りに風の旋転、突風起りし事、四．発火地点及海岸付近は特に矮小粗悪木造家屋連担し且全市に亘り粗雑木造家屋が多かった事、五．防火地区極めて尠く、広場、公園等の都市計画上の施設が完備して居なかった事、六．発火地点は水道終点である為め水圧弱く水量乏しく、加ふるに風力強き為めに消防組の活動意の如く行われなかった事、七．道路概して狭隘にして消防組の部署変更に困難なりし事」（『函館大火災（昭和9年3月21日）調査報告』）と説明しており都市計画事業との関連性を想起させている。
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.syowa9_big_fire_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = persistentMapOf(
+        Res.drawable.syowa9_big_fire_map_image1 to "https://archives.c.fun.ac.jp/documents/1810470672/0001",
+        Res.drawable.syowa9_big_fire_map_image2 to "https://archives.c.fun.ac.jp/documents/1810575397/0001",
+    ),
+    photoImages = persistentMapOf(
+        Res.drawable.syowa9_big_fire_photo_image1 to "https://archives.c.fun.ac.jp/photos/gl000144/0001",
+        Res.drawable.syowa9_big_fire_photo_image2 to "https://archives.c.fun.ac.jp/photos/gl000140/0001",
+        Res.drawable.syowa9_big_fire_photo_image3 to "https://archives.c.fun.ac.jp/photos/gl000150/0001",
+    ),
+    postcardImages = persistentMapOf(
+        Res.drawable.syowa9_big_fire_postcard_image1 to "https://archives.c.fun.ac.jp/postcards/pc001036/0001",
+        Res.drawable.syowa9_big_fire_postcard_image2 to "https://archives.c.fun.ac.jp/postcards/pc001033/0002",
+
+    ),
 )
 
 val yukawachoMerger = MajorEvent(
@@ -93,7 +146,7 @@ val yukawachoMerger = MajorEvent(
     japaneseCalendar = "昭和14年",
     eventType = PopulationEventType.Merger,
     name = "湯川町合併",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "合併" to "合併調査開始以来紆余曲折を経て",
         "函館市" to "農会を函館市農会とすることなど17項目が提示された",
         "湯川町" to "昭和13年8月に入って湯川町から合併条件が提示された",
@@ -113,9 +166,11 @@ val yukawachoMerger = MajorEvent(
             このため道庁の地方課長が来町、町会議員を説得する場面も出現した。今日の機会を失しては将来到底合併は不可能と現実論を説いたわけである。翌10日、湯川町では拡大委員会が開催され、続いて町会が道庁の諮問を異議なく可決した（3月11日付「函新」）。
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.yukawacho_merger_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = persistentMapOf(
+        Res.drawable.yukawacho_merger_photo_image1 to "https://archives.c.fun.ac.jp/photos/ph900026/0023",
+    ),
+    postcardImages = null,
 )
 
 val hakodateAirRaid = MajorEvent(
@@ -123,7 +178,7 @@ val hakodateAirRaid = MajorEvent(
     japaneseCalendar = "昭和20年",
     eventType = PopulationEventType.AirRaid,
     name = "函館空襲",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "函館空襲" to "",
         "北海道空襲" to "7月中旬の北海道空襲は",
         "空襲警報" to "六月二十七日　午前十一時過突如空襲警報発令",
@@ -162,9 +217,11 @@ val hakodateAirRaid = MajorEvent(
         また、市立函館図書館の『市立函館図書館日誌』の7月14日の条には、「空襲警報　午前五時頃発令仝四十分頃遂に本市に侵入せる敵機（小型）は機銃掃射を以て攻撃し来れり、被害民族館東側硝子窓一枚及陳列欄硝子一枚破壊、天井に二箇處の弾痕を認む。本館異状なし。警戒警報解除午后五時」と記されている。
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.hakodate_air_raid_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = persistentMapOf(
+        Res.drawable.hakodate_air_raid_photo_image1 to "https://archives.c.fun.ac.jp/photos/ph003189/0001",
+    ),
+    postcardImages = null,
 )
 
 val toyamaruTyphoon = MajorEvent(
@@ -172,7 +229,7 @@ val toyamaruTyphoon = MajorEvent(
     japaneseCalendar = "昭和29年",
     eventType = PopulationEventType.Typhoon,
     name = "洞爺丸台風",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "洞爺丸台風" to "洞爺丸台風ともいわれるが",
         "転覆事故" to "転覆事故直後の七重浜（函図蔵）",
         "慰霊碑" to "七重浜に建立された遭難者慰霊碑の除幕式がおこなわれ",
@@ -202,9 +259,14 @@ val toyamaruTyphoon = MajorEvent(
             一方、天候に左右されずに、安全で大量に、しかも迅速な輸送力をめざして計画された、本州と北海道を結ぶ海底トンネルの構想は、洞爺丸をはじめとする連絡船の海難事故を契機として、その建設計画が一気に浮上し、進められることになった（コラム55参照）。（桜井健治）
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.toyamaru_typhoon_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = persistentMapOf(
+        Res.drawable.toyamaru_typhoon_photo_image1 to "https://archives.c.fun.ac.jp/photos/ph003119/0006",
+    ),
+    postcardImages = persistentMapOf(
+        Res.drawable.toyamaru_typhoon_postcard_image1 to "https://archives.c.fun.ac.jp/postcards/pc000348/0002",
+        Res.drawable.toyamaru_typhoon_postcard_image2 to "https://archives.c.fun.ac.jp/postcards/pc000348/0001",
+    ),
 )
 
 val zenikamesawamuraMerger = MajorEvent(
@@ -212,7 +274,7 @@ val zenikamesawamuraMerger = MajorEvent(
     japaneseCalendar = "昭和41年",
     eventType = PopulationEventType.Merger,
     name = "銭亀沢村合併",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "銭亀沢村" to "全国的に市町村合併が促進された昭和28年から29年にかけても銭亀沢村との合併はあまり話題にならなかった",
         "行政効率化" to "合併によって自治行政の効率的な運営と住民福祉の向上が期待されますので適当と認め原案可決」と報告",
         "地方振興計画" to "昭和40年9月には村の「地域振興計画（銭亀沢村振興五カ年計画）」が作られた",
@@ -232,9 +294,11 @@ val zenikamesawamuraMerger = MajorEvent(
             昭和42年度から「市地域振興計画」は実施に移され、村役場から函館市銭亀沢支所となった庁舎は、43年1月に新築落成し、上水道も45年度までに敷設された。この「市村建設計画」で、もっとも事業費が計上されたのは、用地買収を含む道路整備費で、ついでコンクリートブロック投入などの沿岸漁場整備の浅海増殖設備費、水道施設費となっていた（『函館市史』銭亀沢編参照）。
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.zenikamesawamura_merger_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = persistentMapOf(
+        Res.drawable.zenikamesawamura_merger_photo_image1 to "https://archives.c.fun.ac.jp/photos/ph004748/0001",
+    ),
+    postcardImages = null,
 )
 
 val kamedasiMerger = MajorEvent(
@@ -242,7 +306,7 @@ val kamedasiMerger = MajorEvent(
     japaneseCalendar = "昭和48年",
     eventType = PopulationEventType.Merger,
     name = "亀田市合併",
-    characteristicWordMap = mapOf(
+    characteristicWordMap = persistentMapOf(
         "亀田市" to "5月15日から臨時亀田市議会が開かれ",
         "水道問題" to "昭和32年には「水道問題で難航　亀田合併」と報じられ（7月11日付け「道新」）",
         "都市化" to "都市化の波に悩む亀田町の実情を伝えた（昭和43年10月8日から13日付け「道新」）",
@@ -264,7 +328,9 @@ val kamedasiMerger = MajorEvent(
             これまでの合併で函館市域面積がどのように変わったかを示しておく（表2－1、図2－5）。人口については昭和14年の湯川町が約1万人、昭和41年の銭亀沢村1万人弱、昭和48年の亀田市6万6000人が増加した。函館市はすでに昭和6年で人口20万の都市となっていたが、昭和48年の亀田市との合併で、人口は30万490人となった。その後、平成12（2000）年の国勢調査では、28万7648人（本庁管内10万159、湯川支所管内5万7449、銭亀沢支所管内8516、亀田支所管内12万1524）となっている。
     """.trimIndent().replace(Regex("(?m)^"), "　"),
     thumbnailImage = Res.drawable.kamedasi_merger_thumbnail,
-    mapImage = null,
-    photoImage = null,
-    postcardImage = null,
+    mapImages = null,
+    photoImages = persistentMapOf(
+        Res.drawable.kamedasi_merger_photo_image1 to "https://archives.c.fun.ac.jp/photos/ph004869/0001",
+    ),
+    postcardImages = null,
 )

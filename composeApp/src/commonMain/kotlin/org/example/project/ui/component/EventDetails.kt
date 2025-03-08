@@ -1,12 +1,16 @@
 package org.example.project.ui.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -18,11 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableMap
 import org.example.project.model.MajorEvent
 import org.example.project.ui.theme.Shapes
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.ui.theme.getEventColor
+import org.example.project.utils.openUrl
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
+@Suppress("LongMethod")
 @Composable
 fun EventDetails(
     event: MajorEvent,
@@ -76,6 +85,32 @@ fun EventDetails(
                         )
                     },
                 )
+                EventDetailsSection(
+                    title = "当時の記録",
+                    textColor = eventColor.content,
+                    content = {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(Paddings.Small),
+                        ) {
+                            EventImage(
+                                title = "地図",
+                                textColor = eventColor.content,
+                                images = event.mapImages,
+                            )
+                            EventImage(
+                                title = "写真",
+                                textColor = eventColor.content,
+                                images = event.photoImages,
+                            )
+                            EventImage(
+                                title = "絵葉書",
+                                textColor = eventColor.content,
+                                images = event.postcardImages,
+                            )
+                        }
+                    },
+                )
             }
         }
     }
@@ -121,5 +156,49 @@ private fun EventDetailsSection(
             color = textColor,
         )
         content()
+    }
+}
+
+@Composable
+private fun EventImage(
+    title: String,
+    textColor: Color,
+    images: ImmutableMap<DrawableResource, String>?,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        TitleMediumText(
+            text = title,
+            color = textColor,
+        )
+        when (images) {
+            null -> {
+                BodyMediumText(
+                    text = "${title}画像がありませんでした。",
+                    color = textColor,
+                )
+            }
+            else -> {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(Paddings.Small),
+                ) {
+                    images.forEach { (image, url) ->
+                        Image(
+                            painter = painterResource(image),
+                            contentDescription = title,
+                            modifier = Modifier
+                                .height(200.dp)
+                                .clip(Shapes.small)
+                                .clickable { openUrl(url) },
+                        )
+                    }
+                }
+            }
+        }
     }
 }

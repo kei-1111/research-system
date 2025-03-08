@@ -42,6 +42,7 @@ kotlin {
             implementation(libs.chart)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.kotlinx.collections.immutable)
         }
     }
 }
