@@ -6,7 +6,7 @@ import org.example.project.ui.base.UiState
 
 data class PopulationUiState(
     val isCharacteristicNodeHovered: Boolean = false,
-    val characteristicNodeException: CharacteristicNodeException? = null,
+    val characteristicNodeException: List<CharacteristicNodeException>? = null,
     val isShowEventNodeDetails: Boolean = false,
     val showingEventNode: MajorEvent? = null,
 ) : UiState

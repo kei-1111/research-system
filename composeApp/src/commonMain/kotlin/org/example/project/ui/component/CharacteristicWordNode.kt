@@ -9,34 +9,46 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.style.TextAlign
-import org.example.project.ui.theme.LocalEventColor
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import org.example.project.model.EventType
+import org.example.project.ui.theme.getEventColor
+
+val CharacteristicWordNodeBackgroundSize = 30.dp
 
 @Composable
-fun CharacteristicNode(
+fun CharacteristicWordNode(
+    eventType: EventType,
     word: String,
     onHover: () -> Unit,
-    onUnHover: () -> Unit,
+    sendWidthPx: (Float) -> Unit,
+    sendHeightPx: (Float) -> Unit,
     modifier: Modifier = Modifier,
+    characteristicWordNodeBackgroundSize: Dp = CharacteristicWordNodeBackgroundSize,
 ) {
-    val eventColor = LocalEventColor.current
+    val eventColor = getEventColor(eventType)
 
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
     if (isHovered) {
         onHover()
-    } else {
-        onUnHover()
     }
 
     Box(
         modifier = modifier
-            .hoverable(interactionSource = interactionSource),
+            .hoverable(interactionSource = interactionSource)
+            .onGloballyPositioned { layoutCoordinates ->
+                sendWidthPx(layoutCoordinates.size.width.toFloat())
+                sendHeightPx(layoutCoordinates.size.height.toFloat())
+            },
         contentAlignment = Alignment.Center,
     ) {
         Circle(
             color = eventColor.base,
+            size = characteristicWordNodeBackgroundSize,
         )
         LabelMediumText(
             text = word,

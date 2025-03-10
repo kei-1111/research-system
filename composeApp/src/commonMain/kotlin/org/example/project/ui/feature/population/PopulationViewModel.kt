@@ -1,33 +1,41 @@
 package org.example.project.ui.feature.population
 
 import androidx.compose.ui.geometry.Offset
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.example.project.model.MajorEvent
 import org.example.project.ui.base.BaseViewModel
 
 class PopulationViewModel : BaseViewModel<PopulationUiState, PopulationUiEvent>(
     initialState = PopulationUiState(),
 ) {
+    private var autoUnHoverJob: Job? = null
+
     fun onCharacteristicNodeHovered(
-        offset: Offset,
-        exception: String,
+        offsetList: List<Offset>,
+        exceptionList: List<String>,
     ) {
+        autoUnHoverJob?.cancel()
+
         updateUiState {
             it.copy(
                 isCharacteristicNodeHovered = true,
-                characteristicNodeException = CharacteristicNodeException(
-                    offset = offset,
-                    exception = exception,
-                ),
+                characteristicNodeException = offsetList.zip(exceptionList) { offset, exception ->
+                    CharacteristicNodeException(offset, exception)
+                },
             )
         }
-    }
 
-    fun onCharacteristicNodeUnHovered() {
-        updateUiState {
-            it.copy(
-                isCharacteristicNodeHovered = false,
-                characteristicNodeException = null,
-            )
+        autoUnHoverJob = viewModelScope.launch {
+            delay(3000)
+            updateUiState {
+                it.copy(
+                    isCharacteristicNodeHovered = false,
+                    characteristicNodeException = null,
+                )
+            }
         }
     }
 
