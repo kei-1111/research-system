@@ -31,7 +31,6 @@ import org.example.project.utils.openUrl
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
-@Suppress("LongMethod")
 @Composable
 fun EventDetails(
     event: MajorEvent,

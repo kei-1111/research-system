@@ -12,11 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,27 +32,37 @@ import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.xygraph.IntLinearAxisModel
 import io.github.koalaplot.core.xygraph.XYGraph
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.example.project.data.hakodateAirRaid
 import org.example.project.data.kamedasiMerger
 import org.example.project.data.meiji40BigFire
+import org.example.project.data.populationRelatedCharacteristicWordList
 import org.example.project.data.syowa9BigFire
 import org.example.project.data.taisyo5BigFire
 import org.example.project.data.totalPopulation
 import org.example.project.data.toyamaruTyphoon
 import org.example.project.data.yukawachoMerger
 import org.example.project.data.zenikamesawamuraMerger
+import org.example.project.ktx.calcMidpointOffset
 import org.example.project.ktx.toDp
-import org.example.project.model.MajorEvent
+import org.example.project.ktx.toPx
+import org.example.project.model.CharacteristicWordNode
+import org.example.project.model.EventNode
+import org.example.project.model.PopulationRelatedEvent
 import org.example.project.ui.base.LocalData
-import org.example.project.ui.component.Event
+import org.example.project.ui.component.ConnectCharacteristicNode
 import org.example.project.ui.component.EventAttachPosition
 import org.example.project.ui.component.EventDetails
+import org.example.project.ui.component.EventNodeCore
+import org.example.project.ui.component.EventNodeSize
 import org.example.project.ui.component.LabelMediumText
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
 import org.koin.compose.koinInject
+import kotlin.math.sqrt
+import kotlin.random.Random
 
 @Suppress("ModifierMissing")
 @Composable
@@ -66,10 +78,10 @@ fun PopulationScreen() {
         viewModel.uiEvent.flowWithLifecycle(lifecycleOwner.lifecycle).onEach { event ->
             when (event) {
                 is PopulationUiEvent.OnCharacteristicNodeHovered -> viewModel.onCharacteristicNodeHovered(
-                    event.offset,
-                    event.exception,
+                    event.offsetList,
+                    event.exceptionList,
                 )
-                is PopulationUiEvent.OnCharacteristicNodeUnHovered -> viewModel.onCharacteristicNodeUnHovered()
+
                 is PopulationUiEvent.OnEventNodeClicked -> viewModel.onEventNodeClicked(event.clickedEvent)
                 is PopulationUiEvent.OnEventNodeDetailsDismissed -> viewModel.onEventNodeDetailsDismissed()
             }
@@ -84,7 +96,7 @@ fun PopulationScreen() {
     }
 }
 
-@Suppress("LongMethod", "SpacingAroundCurly")
+// ここでのOffsetは基本的に、ノードの中心とする。
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 private fun PopulationScreen(
@@ -93,6 +105,30 @@ private fun PopulationScreen(
     modifier: Modifier = Modifier,
 ) {
     val data = LocalData.current
+
+    var meiji40BigFireNode by remember { mutableStateOf(EventNode(meiji40BigFire)) }
+    var taisyo5BigFireNode by remember { mutableStateOf(EventNode(taisyo5BigFire)) }
+    var syowa9BigFireNode by remember { mutableStateOf(EventNode(syowa9BigFire)) }
+    var yukawachoMergerNode by remember { mutableStateOf(EventNode(yukawachoMerger)) }
+    var hakodateAirRaidNode by remember { mutableStateOf(EventNode(hakodateAirRaid)) }
+    var toyamaruTyphoonNode by remember { mutableStateOf(EventNode(toyamaruTyphoon)) }
+    var zenikamesawamuraMergerNode by remember { mutableStateOf(EventNode(zenikamesawamuraMerger)) }
+    var kamedasiMergerNode by remember { mutableStateOf(EventNode(kamedasiMerger)) }
+
+    val getPopulationRelatedEventNode: (PopulationRelatedEvent) -> EventNode = { event ->
+        when (event) {
+            PopulationRelatedEvent.Meiji40BigFire -> meiji40BigFireNode
+            PopulationRelatedEvent.Taisyo5BigFire -> taisyo5BigFireNode
+            PopulationRelatedEvent.Syowa9BigFire -> syowa9BigFireNode
+            PopulationRelatedEvent.YukawachoMerger -> yukawachoMergerNode
+            PopulationRelatedEvent.HakodateAirRaid -> hakodateAirRaidNode
+            PopulationRelatedEvent.ToyamaruTyphoon -> toyamaruTyphoonNode
+            PopulationRelatedEvent.ZenikamesawamuraMerger -> zenikamesawamuraMergerNode
+            PopulationRelatedEvent.KamedasiMerger -> kamedasiMergerNode
+        }
+    }
+
+    val nodeOffsetList = remember { mutableListOf<Offset>() }
 
     Surface(
         modifier = modifier,
@@ -106,8 +142,6 @@ private fun PopulationScreen(
                 yAxisModel = IntLinearAxisModel(0..350000),
                 horizontalMinorGridLineStyle = null,
                 verticalMinorGridLineStyle = null,
-                zoomEnabled = true,
-                allowIndependentZoom = true,
             ) {
                 AreaPlot(
                     data = data,
@@ -121,27 +155,83 @@ private fun PopulationScreen(
                     ),
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     symbol = { point ->
-                        DisplayEventNode(
+                        EventNodeCores(
                             gregorianCalender = point.x,
-                            onEvent = onEvent,
+                            sendMeiji40BigFireOffset = {
+                                meiji40BigFireNode = meiji40BigFireNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendTaisyo5BigFireOffset = {
+                                taisyo5BigFireNode = taisyo5BigFireNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendSyowa9BigFireOffset = {
+                                syowa9BigFireNode = syowa9BigFireNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendYukawachoMergerOffset = {
+                                yukawachoMergerNode = yukawachoMergerNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendHakodateAirRaidOffset = {
+                                hakodateAirRaidNode = hakodateAirRaidNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendToyamaruTyphoonOffset = {
+                                toyamaruTyphoonNode = toyamaruTyphoonNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendZenikamesawamuraMergerOffset = {
+                                zenikamesawamuraMergerNode =
+                                    zenikamesawamuraMergerNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendKamedasiMergerOffset = {
+                                kamedasiMergerNode = kamedasiMergerNode.copy(centerOffset = it)
+                                nodeOffsetList.add(it)
+                            },
+                            sendSymbolOffset = {
+                                nodeOffsetList.add(it)
+                            },
                         )
                     },
                 )
             }
         }
 
+        DisplayCharacteristicWordNode(
+            nodeOffsetList = nodeOffsetList,
+            getPopulationRelatedEventNode = getPopulationRelatedEventNode,
+            onEvent = onEvent,
+        )
+
+        DisplayPopulationRelatedEventNode(
+            meiji40BigFireNode = meiji40BigFireNode,
+            taisyo5BigFireNode = taisyo5BigFireNode,
+            syowa9BigFireNode = syowa9BigFireNode,
+            yukawachoMergerNode = yukawachoMergerNode,
+            hakodateAirRaidNode = hakodateAirRaidNode,
+            toyamaruTyphoonNode = toyamaruTyphoonNode,
+            zenikamesawamuraMergerNode = zenikamesawamuraMergerNode,
+            kamedasiMergerNode = kamedasiMergerNode,
+            onEvent = onEvent,
+        )
+
         if (uiState.isCharacteristicNodeHovered) {
-            uiState.characteristicNodeException?.let {
-                Surface(
-                    modifier = Modifier
-                        .sizeIn(maxWidth = 250.dp)
-                        .offset(x = it.offset.x.toDp(), y = it.offset.y.toDp()),
-                    shape = MaterialTheme.shapes.medium,
-                ) {
-                    LabelMediumText(
-                        text = it.exception,
-                        modifier = Modifier.padding(Paddings.Small),
-                    )
+            uiState.characteristicNodeException?.let { exceptionList ->
+                exceptionList.map {
+                    Surface(
+                        modifier = Modifier
+                            .sizeIn(maxWidth = 250.dp)
+                            .offset(x = it.offset.x.toDp(), y = it.offset.y.toDp()),
+                        shape = MaterialTheme.shapes.medium,
+                        shadowElevation = 5.dp,
+                    ) {
+                        LabelMediumText(
+                            text = it.exception,
+                            modifier = Modifier.padding(Paddings.Small),
+                        )
+                    }
                 }
             }
         }
@@ -158,86 +248,101 @@ private fun PopulationScreen(
     }
 }
 
-@Suppress("LongMethod")
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
-private fun DisplayEventNode(
+private fun EventNodeCores(
     gregorianCalender: Int,
-    onEvent: (PopulationUiEvent) -> Unit,
+    sendMeiji40BigFireOffset: (Offset) -> Unit,
+    sendTaisyo5BigFireOffset: (Offset) -> Unit,
+    sendSyowa9BigFireOffset: (Offset) -> Unit,
+    sendYukawachoMergerOffset: (Offset) -> Unit,
+    sendHakodateAirRaidOffset: (Offset) -> Unit,
+    sendToyamaruTyphoonOffset: (Offset) -> Unit,
+    sendZenikamesawamuraMergerOffset: (Offset) -> Unit,
+    sendKamedasiMergerOffset: (Offset) -> Unit,
+    sendSymbolOffset: (Offset) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (gregorianCalender) {
         meiji40BigFire.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = meiji40BigFire,
+            EventNodeCore(
+                eventType = meiji40BigFire.eventType,
+                sendEventNodeOffset = sendMeiji40BigFireOffset,
+                sendSymbolOffset = sendSymbolOffset,
                 eventAttachPosition = EventAttachPosition.Bottom,
-                onEvent = onEvent,
                 modifier = modifier,
             )
         }
 
         taisyo5BigFire.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = taisyo5BigFire,
+            EventNodeCore(
+                eventType = taisyo5BigFire.eventType,
+                sendEventNodeOffset = sendTaisyo5BigFireOffset,
+                sendSymbolOffset = sendSymbolOffset,
                 eventAttachPosition = EventAttachPosition.Top,
-                onEvent = onEvent,
                 modifier = modifier,
             )
         }
 
         syowa9BigFire.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = syowa9BigFire,
+            EventNodeCore(
+                eventType = syowa9BigFire.eventType,
+                sendEventNodeOffset = sendSyowa9BigFireOffset,
+                sendSymbolOffset = sendSymbolOffset,
                 eventAttachPosition = EventAttachPosition.Bottom,
-                onEvent = onEvent,
                 modifier = modifier,
             )
         }
 
         yukawachoMerger.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = yukawachoMerger,
+            EventNodeCore(
+                eventType = yukawachoMerger.eventType,
+                sendEventNodeOffset = sendYukawachoMergerOffset,
+                sendSymbolOffset = sendSymbolOffset,
                 eventAttachPosition = EventAttachPosition.Top,
-                onEvent = onEvent,
                 modifier = modifier,
             )
         }
 
         hakodateAirRaid.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = hakodateAirRaid,
+            EventNodeCore(
+                eventType = hakodateAirRaid.eventType,
+                sendEventNodeOffset = sendHakodateAirRaidOffset,
+                sendSymbolOffset = sendSymbolOffset,
                 eventAttachPosition = EventAttachPosition.Bottom,
-                onEvent = onEvent,
                 modifier = modifier,
-                leaderLineHeight = 250.dp,
+                leaderLineHeight = 200.dp,
             )
         }
 
-        zenikamesawamuraMerger.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = zenikamesawamuraMerger,
-                eventAttachPosition = EventAttachPosition.Bottom,
-                onEvent = onEvent,
+        toyamaruTyphoon.gregorianCalender -> {
+            EventNodeCore(
+                eventType = toyamaruTyphoon.eventType,
+                sendEventNodeOffset = sendToyamaruTyphoonOffset,
+                sendSymbolOffset = sendSymbolOffset,
+                eventAttachPosition = EventAttachPosition.Top,
                 modifier = modifier,
                 leaderLineHeight = 150.dp,
             )
         }
 
-        toyamaruTyphoon.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = toyamaruTyphoon,
-                eventAttachPosition = EventAttachPosition.Top,
-                onEvent = onEvent,
+        zenikamesawamuraMerger.gregorianCalender -> {
+            EventNodeCore(
+                eventType = zenikamesawamuraMerger.eventType,
+                sendEventNodeOffset = sendZenikamesawamuraMergerOffset,
+                sendSymbolOffset = sendSymbolOffset,
+                eventAttachPosition = EventAttachPosition.Bottom,
                 modifier = modifier,
-                leaderLineHeight = 100.dp,
+                leaderLineHeight = 200.dp,
             )
         }
 
         kamedasiMerger.gregorianCalender -> {
-            PopulationRelatedEvent(
-                event = kamedasiMerger,
+            EventNodeCore(
+                eventType = kamedasiMerger.eventType,
+                sendEventNodeOffset = sendKamedasiMergerOffset,
+                sendSymbolOffset = sendSymbolOffset,
                 eventAttachPosition = EventAttachPosition.Bottom,
-                onEvent = onEvent,
                 modifier = modifier,
             )
         }
@@ -251,24 +356,142 @@ private fun DisplayEventNode(
 }
 
 @Composable
-private fun PopulationRelatedEvent(
-    event: MajorEvent,
-    eventAttachPosition: EventAttachPosition,
+private fun DisplayPopulationRelatedEventNode(
+    meiji40BigFireNode: EventNode,
+    taisyo5BigFireNode: EventNode,
+    syowa9BigFireNode: EventNode,
+    yukawachoMergerNode: EventNode,
+    hakodateAirRaidNode: EventNode,
+    toyamaruTyphoonNode: EventNode,
+    zenikamesawamuraMergerNode: EventNode,
+    kamedasiMergerNode: EventNode,
     onEvent: (PopulationUiEvent) -> Unit,
-    modifier: Modifier = Modifier,
-    leaderLineHeight: Dp = 50.dp,
 ) {
-    Event(
-        event = event,
-        eventAttachPosition = eventAttachPosition,
-        onHover = { offset, exception ->
-            onEvent(PopulationUiEvent.OnCharacteristicNodeHovered(offset, exception))
-        },
-        onUnHover = { onEvent(PopulationUiEvent.OnCharacteristicNodeUnHovered) },
-        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(event)) },
-        modifier = modifier,
-        leaderLineHeight = leaderLineHeight,
+    org.example.project.ui.component.EventNode(
+        eventNode = meiji40BigFireNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(meiji40BigFireNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = taisyo5BigFireNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(taisyo5BigFireNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = syowa9BigFireNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(syowa9BigFireNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = yukawachoMergerNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(yukawachoMergerNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = hakodateAirRaidNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(hakodateAirRaidNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = toyamaruTyphoonNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(toyamaruTyphoonNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = zenikamesawamuraMergerNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(zenikamesawamuraMergerNode.event)) },
+    )
+    org.example.project.ui.component.EventNode(
+        eventNode = kamedasiMergerNode,
+        onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(kamedasiMergerNode.event)) },
     )
 }
 
+@Composable
+private fun DisplayCharacteristicWordNode(
+    nodeOffsetList: MutableList<Offset>,
+    getPopulationRelatedEventNode: (PopulationRelatedEvent) -> EventNode,
+    onEvent: (PopulationUiEvent) -> Unit,
+) {
+    val characteristicWordNodeSizePx = 50.dp.toPx()
+    val eventNodeSizePx = EventNodeSize.toPx()
+
+    populationRelatedCharacteristicWordList.forEach { characteristicWord ->
+        val eventNodeCenterOffset = characteristicWord.includeEvent.map {
+            getPopulationRelatedEventNode(it.key as PopulationRelatedEvent).centerOffset
+        }
+
+        val eventType = getPopulationRelatedEventNode(
+            characteristicWord.includeEvent.keys.first() as PopulationRelatedEvent,
+        ).event.eventType
+
+        val characteristicWordNodeOffset = if (eventNodeCenterOffset.size == 1) {
+            generateCharacteristicWordNodeOffset(
+                origin = eventNodeCenterOffset.single(),
+                existingOffsets = nodeOffsetList,
+                eventNodeSize = eventNodeSizePx + characteristicWordNodeSizePx,
+                margin = 20f,
+                collisionMinDistance = characteristicWordNodeSizePx,
+            )
+        } else {
+            eventNodeCenterOffset.reduce(Offset::plus) / eventNodeCenterOffset.size.toFloat()
+        }
+
+        ConnectCharacteristicNode(
+            eventType = eventType,
+            eventNodeCenterOffset = eventNodeCenterOffset.toPersistentList(),
+            onHover = {
+                onEvent(
+                    PopulationUiEvent.OnCharacteristicNodeHovered(
+                        eventNodeCenterOffset.map { calcMidpointOffset(it, characteristicWordNodeOffset) },
+                        characteristicWord.includeEvent.map { it.value },
+                    ),
+                )
+            },
+            characteristicWordNode = CharacteristicWordNode(
+                characteristicWord = characteristicWord,
+                centerOffset = characteristicWordNodeOffset,
+            ),
+        )
+
+        nodeOffsetList.add(characteristicWordNodeOffset)
+    }
+}
+
 private const val Meiji5 = 1872
+
+fun generateCharacteristicWordNodeOffset(
+    origin: Offset,
+    existingOffsets: List<Offset>,
+    eventNodeSize: Float, // EventNodeの一辺のサイズ（px）
+    margin: Float, // EventNodeの外側に確保する余白
+    collisionMinDistance: Float,
+    maxAttempts: Int = 1000,
+): Offset {
+    val halfEvent = eventNodeSize / 2
+    // 生成可能な候補の領域は、中心から ±(半分のサイズ + margin)
+    val halfOuter = halfEvent + margin
+
+    for (i in 0 until maxAttempts) {
+        // outerRect内からランダムな候補点を生成
+        val randomX = Random.nextDouble(from = -halfOuter.toDouble(), until = halfOuter.toDouble())
+        val randomY = Random.nextDouble(from = -halfOuter.toDouble(), until = halfOuter.toDouble())
+        val candidate = Offset(origin.x + randomX.toFloat(), origin.y + randomY.toFloat())
+
+        // 候補点がEventNode（中心originを持つ正方形）の内部に入っていないかチェック
+        if (candidate.x in (origin.x - halfEvent)..(origin.x + halfEvent) &&
+            candidate.y in (origin.y - halfEvent)..(origin.y + halfEvent)
+        ) {
+            continue
+        }
+
+        // 既存のノードとの衝突判定
+        val isColliding = existingOffsets.any {
+            distanceBetween(it, candidate) < collisionMinDistance
+        }
+        if (isColliding) continue
+
+        return candidate
+    }
+    return Offset.Zero
+}
+
+private fun distanceBetween(offset1: Offset, offset2: Offset): Float {
+    val dx = offset2.x - offset1.x
+    val dy = offset2.y - offset1.y
+    return sqrt(dx * dx + dy * dy)
+}

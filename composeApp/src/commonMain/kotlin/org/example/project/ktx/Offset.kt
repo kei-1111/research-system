@@ -2,7 +2,7 @@ package org.example.project.ktx
 
 import androidx.compose.ui.geometry.Offset
 
-fun calcCenterOffset(
+fun calcMidpointOffset(
     startOffset: Offset,
     endOffset: Offset,
 ): Offset {
@@ -17,5 +17,24 @@ fun sumOffset(
 ): Offset {
     val x = offset1.x + offset2.x
     val y = offset1.y + offset2.y
+    return Offset(x, y)
+}
+
+fun calcCenterOffset(
+    sizePx: Float,
+    leftTopOffset: Offset,
+): Offset {
+    val x = leftTopOffset.x + sizePx / 2
+    val y = leftTopOffset.y + sizePx / 2
+    return Offset(x, y)
+}
+
+fun calcLeftTopOffset(
+    widthPx: Float,
+    heightPx: Float,
+    centerOffset: Offset,
+): Offset {
+    val x = centerOffset.x - widthPx / 2
+    val y = centerOffset.y - heightPx / 2
     return Offset(x, y)
 }

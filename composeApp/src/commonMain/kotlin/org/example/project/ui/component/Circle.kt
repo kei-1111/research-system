@@ -7,16 +7,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 
 @Composable
 fun Circle(
     color: Color,
+    size: Dp,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
-            .size(50.dp)
+            .size(size)
             .background(
                 color = color,
                 shape = CircleShape,
