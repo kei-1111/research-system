@@ -35,28 +35,29 @@ import io.github.koalaplot.core.xygraph.XYGraph
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.example.project.data.hakodateAirRaid
-import org.example.project.data.kamedasiMerger
-import org.example.project.data.meiji40BigFire
-import org.example.project.data.populationRelatedCharacteristicWordList
-import org.example.project.data.syowa9BigFire
-import org.example.project.data.taisyo5BigFire
-import org.example.project.data.totalPopulation
-import org.example.project.data.toyamaruTyphoon
-import org.example.project.data.yukawachoMerger
-import org.example.project.data.zenikamesawamuraMerger
+import org.example.project.data.population.PopulationRelatedEventId
+import org.example.project.data.population.hakodateAirRaid
+import org.example.project.data.population.kamedasiMerger
+import org.example.project.data.population.meiji40BigFire
+import org.example.project.data.population.populationRelatedCharacteristicWordList
+import org.example.project.data.population.syowa9BigFire
+import org.example.project.data.population.taisyo5BigFire
+import org.example.project.data.population.totalPopulation
+import org.example.project.data.population.toyamaruTyphoon
+import org.example.project.data.population.yukawachoMerger
+import org.example.project.data.population.zenikamesawamuraMerger
 import org.example.project.ktx.calcMidpointOffset
 import org.example.project.ktx.toDp
 import org.example.project.ktx.toPx
 import org.example.project.model.CharacteristicWordNode
 import org.example.project.model.EventNode
-import org.example.project.model.PopulationRelatedEvent
 import org.example.project.ui.base.LocalData
 import org.example.project.ui.component.ConnectCharacteristicNode
 import org.example.project.ui.component.EventAttachPosition
 import org.example.project.ui.component.EventDetails
 import org.example.project.ui.component.EventNodeCore
 import org.example.project.ui.component.EventNodeSize
+import org.example.project.ui.component.EventNodeView
 import org.example.project.ui.component.LabelMediumText
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
@@ -115,16 +116,16 @@ private fun PopulationScreen(
     var zenikamesawamuraMergerNode by remember { mutableStateOf(EventNode(zenikamesawamuraMerger)) }
     var kamedasiMergerNode by remember { mutableStateOf(EventNode(kamedasiMerger)) }
 
-    val getPopulationRelatedEventNode: (PopulationRelatedEvent) -> EventNode = { event ->
-        when (event) {
-            PopulationRelatedEvent.Meiji40BigFire -> meiji40BigFireNode
-            PopulationRelatedEvent.Taisyo5BigFire -> taisyo5BigFireNode
-            PopulationRelatedEvent.Syowa9BigFire -> syowa9BigFireNode
-            PopulationRelatedEvent.YukawachoMerger -> yukawachoMergerNode
-            PopulationRelatedEvent.HakodateAirRaid -> hakodateAirRaidNode
-            PopulationRelatedEvent.ToyamaruTyphoon -> toyamaruTyphoonNode
-            PopulationRelatedEvent.ZenikamesawamuraMerger -> zenikamesawamuraMergerNode
-            PopulationRelatedEvent.KamedasiMerger -> kamedasiMergerNode
+    val getPopulationRelatedEventNode: (PopulationRelatedEventId) -> EventNode = { id ->
+        when (id) {
+            PopulationRelatedEventId.Meiji40BigFire -> meiji40BigFireNode
+            PopulationRelatedEventId.Taisyo5BigFire -> taisyo5BigFireNode
+            PopulationRelatedEventId.Syowa9BigFire -> syowa9BigFireNode
+            PopulationRelatedEventId.YukawachoMerger -> yukawachoMergerNode
+            PopulationRelatedEventId.HakodateAirRaid -> hakodateAirRaidNode
+            PopulationRelatedEventId.ToyamaruTyphoon -> toyamaruTyphoonNode
+            PopulationRelatedEventId.ZenikamesawamuraMerger -> zenikamesawamuraMergerNode
+            PopulationRelatedEventId.KamedasiMerger -> kamedasiMergerNode
         }
     }
 
@@ -367,35 +368,35 @@ private fun DisplayPopulationRelatedEventNode(
     kamedasiMergerNode: EventNode,
     onEvent: (PopulationUiEvent) -> Unit,
 ) {
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = meiji40BigFireNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(meiji40BigFireNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = taisyo5BigFireNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(taisyo5BigFireNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = syowa9BigFireNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(syowa9BigFireNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = yukawachoMergerNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(yukawachoMergerNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = hakodateAirRaidNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(hakodateAirRaidNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = toyamaruTyphoonNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(toyamaruTyphoonNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = zenikamesawamuraMergerNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(zenikamesawamuraMergerNode.event)) },
     )
-    org.example.project.ui.component.EventNode(
+    EventNodeView(
         eventNode = kamedasiMergerNode,
         onClick = { onEvent(PopulationUiEvent.OnEventNodeClicked(kamedasiMergerNode.event)) },
     )
@@ -404,7 +405,7 @@ private fun DisplayPopulationRelatedEventNode(
 @Composable
 private fun DisplayCharacteristicWordNode(
     nodeOffsetList: MutableList<Offset>,
-    getPopulationRelatedEventNode: (PopulationRelatedEvent) -> EventNode,
+    getPopulationRelatedEventNode: (PopulationRelatedEventId) -> EventNode,
     onEvent: (PopulationUiEvent) -> Unit,
 ) {
     val characteristicWordNodeSizePx = 50.dp.toPx()
@@ -412,11 +413,11 @@ private fun DisplayCharacteristicWordNode(
 
     populationRelatedCharacteristicWordList.forEach { characteristicWord ->
         val eventNodeCenterOffset = characteristicWord.includeEvent.map {
-            getPopulationRelatedEventNode(it.key as PopulationRelatedEvent).centerOffset
+            getPopulationRelatedEventNode(it.key as PopulationRelatedEventId).centerOffset
         }
 
         val eventType = getPopulationRelatedEventNode(
-            characteristicWord.includeEvent.keys.first() as PopulationRelatedEvent,
+            characteristicWord.includeEvent.keys.first() as PopulationRelatedEventId,
         ).event.eventType
 
         val characteristicWordNodeOffset = if (eventNodeCenterOffset.size == 1) {

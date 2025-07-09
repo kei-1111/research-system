@@ -19,7 +19,7 @@ import org.example.project.ui.theme.getEventColor
 val CharacteristicWordNodeBackgroundSize = 30.dp
 
 @Composable
-fun CharacteristicWordNode(
+fun CharacteristicWordNodeView(
     eventType: EventType,
     word: String,
     onHover: () -> Unit,

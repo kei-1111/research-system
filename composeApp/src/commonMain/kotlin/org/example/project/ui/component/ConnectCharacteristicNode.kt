@@ -51,7 +51,7 @@ fun ConnectCharacteristicNode(
             )
         }
 
-        CharacteristicWordNode(
+        CharacteristicWordNodeView(
             eventType = eventType,
             word = characteristicWord.word,
             onHover = onHover,

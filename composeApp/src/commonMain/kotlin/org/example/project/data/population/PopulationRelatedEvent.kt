@@ -1,9 +1,7 @@
-package org.example.project.data
+package org.example.project.data.population
 
 import kotlinx.collections.immutable.persistentMapOf
 import org.example.project.model.MajorEvent
-import org.example.project.model.PopulationEventType
-import org.example.project.model.PopulationRelatedEvent
 import research_system.composeapp.generated.resources.Res
 import research_system.composeapp.generated.resources.hakodate_air_raid_photo_image1
 import research_system.composeapp.generated.resources.hakodate_air_raid_thumbnail
@@ -40,11 +38,12 @@ import research_system.composeapp.generated.resources.yukawacho_merger_thumbnail
 import research_system.composeapp.generated.resources.zenikamesawamura_merger_photo_image1
 import research_system.composeapp.generated.resources.zenikamesawamura_merger_thumbnail
 
+
 val meiji40BigFire = MajorEvent(
     gregorianCalender = 1907,
     japaneseCalendar = "明治40年",
     eventType = PopulationEventType.BigFire,
-    id = PopulationRelatedEvent.Meiji40BigFire,
+    id = PopulationRelatedEventId.Meiji40BigFire,
     name = "明治40年大火",
     exception = """
             明治40年8月25日午後10時20分東川町217番地より出火した。出火時は南東の風で風速10メートルの強風であったが、しだいに風力が強くなり、翌26日午前1時頃には16メートルの暴風となった。しかも出火場所付近は、家屋が租造のうえ密集していたため四方に延焼し焼失区域を拡大していった。さらにこの時期は、不幸にも水源が枯渇し日々の用水にも欠乏していたため消火栓の効力が少なく、警察官や消防組員等が鋭意防御に尽力しても容易に消化活動がすすまなかったのである。33か町8977戸（区役所調べ1万2390戸）が焼失し、その損害は実に3114万8337円にのぼった。焼死者8名、負傷者1000名を出してこの大火は翌26日午前9時頃にやっと鎮火した（『函館大火史』）。
@@ -67,7 +66,7 @@ val taisyo5BigFire = MajorEvent(
     gregorianCalender = 1916,
     japaneseCalendar = "大正5年",
     eventType = PopulationEventType.BigFire,
-    id = PopulationRelatedEvent.Taisyo5BigFire,
+    id = PopulationRelatedEventId.Taisyo5BigFire,
     name = "大正5年大火",
     exception = """
             旭町40番地の白玉製造所から出火し、水道断水中もあって942棟1763戸を焼失する。
@@ -92,7 +91,7 @@ val syowa9BigFire = MajorEvent(
     gregorianCalender = 1934,
     japaneseCalendar = "昭和9年",
     eventType = PopulationEventType.BigFire,
-    id = PopulationRelatedEvent.Syowa9BigFire,
+    id = PopulationRelatedEventId.Syowa9BigFire,
     name = "昭和9年大火",
     exception = """
             昭和9年3月21日午後6時53分、函館市住吉町の民家より発火した火災は、風速20余メートルにおよぶ東南の烈風に煽られて火勢劇烈を極め、瞬時にして他に延焼拡大していった。物凄い火炎は、青柳町より豊川町、鶴岡町、松風町、新川町方面を襲い、消防隊や軍隊等の必死の努力も、烈風と倒壊した家屋や電柱等の障害物に妨げられ、充分なる機能を発揮することが出来なかったのである。その後、風向が漸次西方に変化するに伴って末広町、会所町、元町方面は幸いに二十間坂によって延焼を遮断することが出来たが、反対に風下にあたる新川町、堀川町、的場町の間は全く廃墟に帰し、さらに北方に向かって延焼し、翌22日午前6時頃に鎮火することができたのである。実に、全市の3分の1を焼失したのである（『函館大火災害史』）。
@@ -112,14 +111,14 @@ val syowa9BigFire = MajorEvent(
         Res.drawable.syowa9_big_fire_postcard_image1 to "https://archives.c.fun.ac.jp/postcards/pc001036/0001",
         Res.drawable.syowa9_big_fire_postcard_image2 to "https://archives.c.fun.ac.jp/postcards/pc001033/0002",
 
-    ),
+        ),
 )
 
 val yukawachoMerger = MajorEvent(
     gregorianCalender = 1939,
     japaneseCalendar = "昭和14年",
     eventType = PopulationEventType.Merger,
-    id = PopulationRelatedEvent.YukawachoMerger,
+    id = PopulationRelatedEventId.YukawachoMerger,
     name = "湯川町合併",
     exception = """
             合併調査開始以来紆余曲折を経て、昭和13年8月に入って湯川町から合併条件が提示された。さきの促進事項2点のほか、湯川小学校の移転改築、租税賦課を現在のままで5年間増額しないこと、道路の改修舗装、湯川町農会を函館市農会とすることなど17項目が提示された。市側の合併委員会での協議の結果、5項目を合併条件、10項目を希望条件とすることと決定した。
@@ -142,7 +141,7 @@ val hakodateAirRaid = MajorEvent(
     gregorianCalender = 1945,
     japaneseCalendar = "昭和20年",
     eventType = PopulationEventType.AirRaid,
-    id = PopulationRelatedEvent.HakodateAirRaid,
+    id = PopulationRelatedEventId.HakodateAirRaid,
     name = "函館空襲",
     exception = """
         太平洋戦争の終結もま近い昭和20年7月14、15日の両日、東北・北海道地方はアメリカ海軍機動部隊の攻撃を受け、本州と北海道を結ぶ青函連絡船の基地でもある函館市は大きな被害を受けた。
@@ -184,7 +183,7 @@ val toyamaruTyphoon = MajorEvent(
     gregorianCalender = 1954,
     japaneseCalendar = "昭和29年",
     eventType = PopulationEventType.Typhoon,
-    id = PopulationRelatedEvent.ToyamaruTyphoon,
+    id = PopulationRelatedEventId.ToyamaruTyphoon,
     name = "洞爺丸台風",
     exception = """
             津軽海峡の大動脈として活躍した青函連絡船が、明治41（1908）年3月に就航してから、昭和63（1988）年3月に終航するまでの80年間にわたる長い歴史にあって、最大の悲劇は、昭和29（1954）年9月26日、函館を襲った台風15号による洞爺丸、第十一青函丸、北見丸、十勝丸、日高丸の5隻もの青函連絡船の転覆沈没事故である。
@@ -220,7 +219,7 @@ val zenikamesawamuraMerger = MajorEvent(
     gregorianCalender = 1966,
     japaneseCalendar = "昭和41年",
     eventType = PopulationEventType.Merger,
-    id = PopulationRelatedEvent.ZenikamesawamuraMerger,
+    id = PopulationRelatedEventId.ZenikamesawamuraMerger,
     name = "銭亀沢村合併",
     exception = """
             根崎温泉地区の函館市への編入以後は、全国的に市町村合併が促進された昭和28年から29年にかけても銭亀沢村との合併はあまり話題にならなかった。ちなみに、昭和29年には全国で176の市が誕生している（昭和30年版『日本都市年鑑』）。経済の高度成長期と命名されることになる昭和30年代に入ると、住民の生活や環境に対する意識も高くなった。函館市との合併時に銭亀沢村の教育長であった吉田正明の回想によると、とくに上水道の敷設要望が強かったことをあげている。昭和28年から29年に銭亀地区と志海苔地区に簡易上水道を敷設したが、あまり衛生的とはいえず、ある村議に「村長、今の簡易水道は、水を汲んでおくとボーフラがわいているが、われわれは金魚ではないんだ。ボーフラを喰って生きるつもりはない。どうするつもりか」と質問され、答弁に手間取って休憩時間となり、その時蛯子村長は「イヤイヤあれは飲み方があるんだよ、水を飲むときはまず瓶の縁をトントンと叩くとボーフラは瓶の底に沈むから、そのとき汲んで飲むとよい、家でもそうしている」とはなしてうやむやとなったそうである（吉田正明「銭亀沢村時代の様々なこと」『地域史研究はこだて』第19号）。
@@ -243,7 +242,7 @@ val kamedasiMerger = MajorEvent(
     gregorianCalender = 1973,
     japaneseCalendar = "昭和48年",
     eventType = PopulationEventType.Merger,
-    id = PopulationRelatedEvent.KamedasiMerger,
+    id = PopulationRelatedEventId.KamedasiMerger,
     name = "亀田市合併",
     exception = """
             字港地区の編入後も函館市から合併を働きかけられていた亀田村では、昭和28年には亀田村議会が村長を不信任し（「市村合併問題にからみ村内が混乱の極に達しているのに首長として何らの収集策を講じない」として）、対抗策として村長が村議会を解散、改選後村長が信任されるという動きもあったが、この時は村は合併しない方向で合併問題が終息した。

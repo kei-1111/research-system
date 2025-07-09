@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.painterResource
 val EventNodeSize = 100.dp
 
 @Composable
-fun EventNode(
+fun EventNodeView(
     eventNode: EventNode,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

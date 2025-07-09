@@ -1,6 +1,6 @@
 @file:Suppress("MagicNumber")
 
-package org.example.project.data
+package org.example.project.data.population
 
 val totalPopulation = listOf(
     25403,
