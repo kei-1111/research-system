@@ -2,6 +2,7 @@
 
 package org.example.project.ui.feature.population
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -34,7 +35,9 @@ import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.xygraph.IntLinearAxisModel
+import io.github.koalaplot.core.xygraph.TickPosition
 import io.github.koalaplot.core.xygraph.XYGraph
+import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -142,12 +145,18 @@ private fun PopulationScreen(
     ) {
         ChartLayout(
             modifier = Modifier
-                .padding(Paddings.Small)
-                .padding(end = yAxisLabelWidth),
+                .padding(10.dp)
+                .padding(end = yAxisLabelWidth + 4.dp),
         ) {
             XYGraph(
                 xAxisModel = IntLinearAxisModel(data.minOf { it.x }..data.maxOf { it.x }),
                 yAxisModel = IntLinearAxisModel(0..350000),
+                xAxisStyle = rememberAxisStyle(
+                    tickPosition = TickPosition.Inside
+                ),
+                yAxisStyle = rememberAxisStyle(
+                    tickPosition = TickPosition.Inside,
+                ),
                 horizontalMinorGridLineStyle = null,
                 verticalMinorGridLineStyle = null,
                 xAxisLabels = @Composable { value ->
@@ -160,12 +169,14 @@ private fun PopulationScreen(
                     Text(
                         text = "${value / 10000}万",
                         style = Typography().bodyMedium,
-                        modifier = Modifier.onGloballyPositioned {
-                            val width = with(density) { it.size.width.toDp() }
-                            if (width > yAxisLabelWidth) {
-                                yAxisLabelWidth = width
-                            }
-                        },
+                        modifier = Modifier
+                            .padding(end = 4.dp)
+                            .onGloballyPositioned {
+                                val width = with(density) { it.size.width.toDp() }
+                                if (width > yAxisLabelWidth) {
+                                    yAxisLabelWidth = width
+                                }
+                            },
                     )
                 },
             ) {
@@ -224,6 +235,16 @@ private fun PopulationScreen(
                 )
             }
         }
+
+        Text(
+            text = "函館市の人口推移",
+            color = MaterialTheme.colorScheme.onSurface,
+            style = Typography().headlineMedium,
+            modifier = Modifier
+                .padding(top = 36.dp)
+                .padding(start = yAxisLabelWidth + 40.dp)
+                .background(MaterialTheme.colorScheme.surface)
+        )
 
         DisplayCharacteristicWordNode(
             nodeOffsetList = nodeOffsetList,
@@ -463,7 +484,12 @@ private fun DisplayCharacteristicWordNode(
             onHover = {
                 onEvent(
                     PopulationUiEvent.OnCharacteristicNodeHovered(
-                        eventNodeCenterOffset.map { calcMidpointOffset(it, characteristicWordNodeOffset) },
+                        eventNodeCenterOffset.map {
+                            calcMidpointOffset(
+                                it,
+                                characteristicWordNodeOffset
+                            )
+                        },
                         characteristicWord.includeEvent.map { it.value },
                     ),
                 )
