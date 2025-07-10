@@ -38,7 +38,6 @@ import research_system.composeapp.generated.resources.yukawacho_merger_thumbnail
 import research_system.composeapp.generated.resources.zenikamesawamura_merger_photo_image1
 import research_system.composeapp.generated.resources.zenikamesawamura_merger_thumbnail
 
-
 val meiji40BigFire = MajorEvent(
     gregorianCalender = 1907,
     japaneseCalendar = "明治40年",
@@ -111,7 +110,7 @@ val syowa9BigFire = MajorEvent(
         Res.drawable.syowa9_big_fire_postcard_image1 to "https://archives.c.fun.ac.jp/postcards/pc001036/0001",
         Res.drawable.syowa9_big_fire_postcard_image2 to "https://archives.c.fun.ac.jp/postcards/pc001033/0002",
 
-        ),
+    ),
 )
 
 val yukawachoMerger = MajorEvent(

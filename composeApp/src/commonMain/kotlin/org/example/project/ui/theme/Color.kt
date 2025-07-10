@@ -4,8 +4,8 @@ package org.example.project.ui.theme
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
+import org.example.project.data.population.PopulationEventType
 import org.example.project.model.EventType
-import org.example.project.model.PopulationEventType
 
 val LocalEventColor = compositionLocalOf<EventColor> { error("Event Color Nothing") }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,6 +62,7 @@ import org.example.project.ui.component.EventNodeCore
 import org.example.project.ui.component.EventNodeSize
 import org.example.project.ui.component.EventNodeView
 import org.example.project.ui.component.LabelMediumText
+import org.example.project.ui.theme.Typography
 import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
 import org.koin.compose.koinInject
@@ -130,19 +134,40 @@ private fun PopulationScreen(
     }
 
     val nodeOffsetList = remember { mutableListOf<Offset>() }
+    var yAxisLabelWidth by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
 
     Surface(
         modifier = modifier,
     ) {
         ChartLayout(
             modifier = Modifier
-                .padding(Paddings.Small),
+                .padding(Paddings.Small)
+                .padding(end = yAxisLabelWidth),
         ) {
             XYGraph(
-                xAxisModel = IntLinearAxisModel(data.minOf { it.x } ..data.maxOf { it.x }),
+                xAxisModel = IntLinearAxisModel(data.minOf { it.x }..data.maxOf { it.x }),
                 yAxisModel = IntLinearAxisModel(0..350000),
                 horizontalMinorGridLineStyle = null,
                 verticalMinorGridLineStyle = null,
+                xAxisLabels = @Composable { value ->
+                    Text(
+                        text = "${value}年",
+                        style = Typography().bodyMedium,
+                    )
+                },
+                yAxisLabels = @Composable { value ->
+                    Text(
+                        text = "${value / 10000}万",
+                        style = Typography().bodyMedium,
+                        modifier = Modifier.onGloballyPositioned {
+                            val width = with(density) { it.size.width.toDp() }
+                            if (width > yAxisLabelWidth) {
+                                yAxisLabelWidth = width
+                            }
+                        },
+                    )
+                },
             ) {
                 AreaPlot(
                     data = data,

@@ -27,13 +27,13 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HistoricalEventDemoScreen() {
     val viewModel: PopulationViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
-    
+
     var filteredEvent by remember { mutableStateOf<List<HistoricalEvent>>(emptyList()) }
 
     if (uiState.isLoadingHistoricalEvents) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator()
         }
@@ -43,7 +43,7 @@ fun HistoricalEventDemoScreen() {
     uiState.historicalEventsError?.let { error ->
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             BodyMediumText(text = "Error: $error")
         }
@@ -62,10 +62,10 @@ fun HistoricalEventDemoScreen() {
                     filteredEvent = uiState.historicalEvents.filter {
                         it.text.contains("大火") || it.source1?.contains("大火") == true
                     }
-                }
+                },
             ) {
                 BodyMediumText(
-                    text = "大火"
+                    text = "大火",
                 )
             }
             Button(
@@ -73,19 +73,19 @@ fun HistoricalEventDemoScreen() {
                     filteredEvent = uiState.historicalEvents.filter {
                         it.text.contains("戦争") || it.source1?.contains("戦争") == true
                     }
-                }
+                },
             ) {
                 BodyMediumText(
-                    text = "戦争"
+                    text = "戦争",
                 )
             }
             Button(
                 onClick = {
                     filteredEvent = uiState.historicalEvents
-                }
+                },
             ) {
                 BodyMediumText(
-                    text = "全て"
+                    text = "全て",
                 )
             }
         }
@@ -96,7 +96,7 @@ fun HistoricalEventDemoScreen() {
             items(filteredEvent) { event ->
                 HistoricalEventItem(
                     historicalEvent = event,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -114,66 +114,65 @@ fun HistoricalEventItem(
             horizontalArrangement = Arrangement.spacedBy(Paddings.Small),
         ) {
             BodyMediumText(
-                text = historicalEvent.jyear
+                text = historicalEvent.jyear,
             )
             BodyMediumText(
-                text = historicalEvent.year.toString()
+                text = historicalEvent.year.toString(),
             )
             BodyMediumText(
-                text = historicalEvent.leapMonth.toString()
+                text = historicalEvent.leapMonth.toString(),
             )
             historicalEvent.month?.let {
                 BodyMediumText(
-                    text = it.toString()
+                    text = it.toString(),
                 )
             }
             historicalEvent.day?.let {
                 BodyMediumText(
-                    text = it.toString()
+                    text = it.toString(),
                 )
             }
             historicalEvent.season?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
             BodyMediumText(
-                text = historicalEvent.eto
+                text = historicalEvent.eto,
             )
             historicalEvent.source1?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
             historicalEvent.source2?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
             historicalEvent.source3?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
             historicalEvent.source4?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
             historicalEvent.source5?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
             historicalEvent.source6?.let {
                 BodyMediumText(
-                    text = it
+                    text = it,
                 )
             }
         }
         BodyMediumText(
-            text = historicalEvent.text
+            text = historicalEvent.text,
         )
     }
 }
-

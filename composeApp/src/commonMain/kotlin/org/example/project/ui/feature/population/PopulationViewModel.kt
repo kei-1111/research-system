@@ -10,7 +10,7 @@ import org.example.project.model.MajorEvent
 import org.example.project.ui.base.BaseViewModel
 
 class PopulationViewModel(
-    private val historicalEventsRepository: HistoricalEventsRepository
+    private val historicalEventsRepository: HistoricalEventsRepository,
 ) : BaseViewModel<PopulationUiState, PopulationUiEvent>(
     initialState = PopulationUiState(),
 ) {
@@ -22,7 +22,7 @@ class PopulationViewModel(
 
     private fun loadHistoricalEvents() {
         updateUiState { it.copy(isLoadingHistoricalEvents = true) }
-        
+
         viewModelScope.launch {
             historicalEventsRepository.getHistoricalEvents()
                 .onSuccess { events ->
@@ -30,7 +30,7 @@ class PopulationViewModel(
                         it.copy(
                             historicalEvents = events,
                             isLoadingHistoricalEvents = false,
-                            historicalEventsError = null
+                            historicalEventsError = null,
                         )
                     }
                 }
@@ -38,7 +38,7 @@ class PopulationViewModel(
                     updateUiState {
                         it.copy(
                             isLoadingHistoricalEvents = false,
-                            historicalEventsError = error.message
+                            historicalEventsError = error.message,
                         )
                     }
                 }
