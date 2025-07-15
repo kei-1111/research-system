@@ -4,6 +4,8 @@ import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -50,10 +52,11 @@ fun CharacteristicWordNodeView(
             color = eventColor.base,
             size = characteristicWordNodeBackgroundSize,
         )
-        LabelMediumText(
+        Text(
             text = word,
             textAlign = TextAlign.Center,
             color = eventColor.content,
+            style = MaterialTheme.typography.labelMedium,
         )
     }
 }

@@ -1,50 +1,39 @@
-@file:Suppress("MagicNumber")
-
 package org.example.project.ui.theme
 
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
-import org.example.project.data.population.PopulationEventType
-import org.example.project.model.EventType
 
-val LocalEventColor = compositionLocalOf<EventColor> { error("Event Color Nothing") }
-
-val BigFire = EventColor(
-    base = Color(0xFFFBB077),
-    emphasis = Color(0xFFE56300),
-    content = Color(0xFF6A5C49),
-)
-
-val Merger = EventColor(
-    base = Color(0xFFB0FB77),
-    emphasis = Color(0xFF0B9307),
-    content = Color(0xFF547353),
-)
-
-val AirRaid = EventColor(
-    base = Color(0xFFA4A0C5),
-    emphasis = Color(0xFF540793),
-    content = Color(0xFF4D3E59),
-)
-
-val Typhoon = EventColor(
-    base = Color(0xFFD0D0D0),
-    emphasis = Color(0xFF3E3B41),
-    content = Color(0xFF272727),
-)
-
-fun getEventColor(eventType: EventType): EventColor {
-    return when (eventType) {
-        PopulationEventType.BigFire -> BigFire
-        PopulationEventType.Merger -> Merger
-        PopulationEventType.AirRaid -> AirRaid
-        PopulationEventType.Typhoon -> Typhoon
-        else -> throw IllegalArgumentException("Unknown event type: $eventType")
-    }
-}
-
-data class EventColor(
-    val base: Color,
-    val emphasis: Color,
-    val content: Color,
-)
+val primaryLight = Color(0xFF5D5F5F)
+val onPrimaryLight = Color(0xFFFFFFFF)
+val primaryContainerLight = Color(0xFFFFFFFF)
+val onPrimaryContainerLight = Color(0xFF747676)
+val secondaryLight = Color(0xFF5E5E5E)
+val onSecondaryLight = Color(0xFFFFFFFF)
+val secondaryContainerLight = Color(0xFFE4E2E2)
+val onSecondaryContainerLight = Color(0xFF646464)
+val tertiaryLight = Color(0xFF5D5F5F)
+val onTertiaryLight = Color(0xFFFFFFFF)
+val tertiaryContainerLight = Color(0xFFFFFFFF)
+val onTertiaryContainerLight = Color(0xFF747676)
+val errorLight = Color(0xFFBA1A1A)
+val onErrorLight = Color(0xFFFFFFFF)
+val errorContainerLight = Color(0xFFFFDAD6)
+val onErrorContainerLight = Color(0xFF93000A)
+val backgroundLight = Color(0xFFFCF8F8)
+val onBackgroundLight = Color(0xFF1C1B1B)
+val surfaceLight = Color(0xFFFCF8F8)
+val onSurfaceLight = Color(0xFF1C1B1B)
+val surfaceVariantLight = Color(0xFFE0E3E3)
+val onSurfaceVariantLight = Color(0xFF444748)
+val outlineLight = Color(0xFF747878)
+val outlineVariantLight = Color(0xFFC4C7C8)
+val scrimLight = Color(0xFF000000)
+val inverseSurfaceLight = Color(0xFF313030)
+val inverseOnSurfaceLight = Color(0xFFF4F0EF)
+val inversePrimaryLight = Color(0xFFC6C6C7)
+val surfaceDimLight = Color(0xFFDDD9D9)
+val surfaceBrightLight = Color(0xFFFCF8F8)
+val surfaceContainerLowestLight = Color(0xFFFFFFFF)
+val surfaceContainerLowLight = Color(0xFFF6F3F2)
+val surfaceContainerLight = Color(0xFFF1EDEC)
+val surfaceContainerHighLight = Color(0xFFEBE7E7)
+val surfaceContainerHighestLight = Color(0xFFE5E2E1)

@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -64,9 +63,6 @@ import org.example.project.ui.component.EventDetails
 import org.example.project.ui.component.EventNodeCore
 import org.example.project.ui.component.EventNodeSize
 import org.example.project.ui.component.EventNodeView
-import org.example.project.ui.component.LabelMediumText
-import org.example.project.ui.theme.Typography
-import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.utils.toPointList
 import org.koin.compose.koinInject
 import kotlin.math.sqrt
@@ -162,13 +158,15 @@ private fun PopulationScreen(
                 xAxisLabels = @Composable { value ->
                     Text(
                         text = "${value}年",
-                        style = Typography().bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     )
                 },
                 yAxisLabels = @Composable { value ->
                     Text(
                         text = "${value / 10000}万",
-                        style = Typography().bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         modifier = Modifier
                             .padding(end = 4.dp)
                             .onGloballyPositioned {
@@ -183,11 +181,11 @@ private fun PopulationScreen(
                 AreaPlot(
                     data = data,
                     lineStyle = LineStyle(
-                        brush = SolidColor(Color(0xFF37A78F)),
+                        brush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
                         strokeWidth = 2.dp,
                     ),
                     areaStyle = AreaStyle(
-                        brush = SolidColor(Color(0xFF37A78F)),
+                        brush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)),
                         alpha = 0.5f,
                     ),
                     areaBaseline = AreaBaseline.ConstantLine(0),
@@ -239,7 +237,7 @@ private fun PopulationScreen(
         Text(
             text = "函館市の人口推移",
             color = MaterialTheme.colorScheme.onSurface,
-            style = Typography().headlineMedium,
+            style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier
                 .padding(top = 36.dp)
                 .padding(start = yAxisLabelWidth + 40.dp)
@@ -274,9 +272,10 @@ private fun PopulationScreen(
                         shape = MaterialTheme.shapes.medium,
                         shadowElevation = 5.dp,
                     ) {
-                        LabelMediumText(
+                        Text(
                             text = it.exception,
-                            modifier = Modifier.padding(Paddings.Small),
+                            modifier = Modifier.padding(10.dp),
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     }
                 }

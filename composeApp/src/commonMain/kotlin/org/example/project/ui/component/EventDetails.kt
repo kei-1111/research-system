@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableMap
 import org.example.project.model.MajorEvent
 import org.example.project.ui.theme.Shapes
-import org.example.project.ui.theme.dimensions.Paddings
 import org.example.project.ui.theme.getEventColor
 import org.example.project.utils.openUrl
 import org.jetbrains.compose.resources.DrawableResource
@@ -65,9 +66,9 @@ fun EventDetails(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(Paddings.Large)
+                    .padding(30.dp)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(Paddings.Medium),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
                 EventHeader(
                     name = event.name,
@@ -78,9 +79,10 @@ fun EventDetails(
                     title = "概要",
                     textColor = eventColor.content,
                     content = {
-                        BodyMediumText(
+                        Text(
                             text = event.exception,
                             color = eventColor.content,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     },
                 )
@@ -90,7 +92,7 @@ fun EventDetails(
                     content = {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(Paddings.Small),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
                             EventImage(
                                 title = "地図",
@@ -125,9 +127,10 @@ private fun EventHeader(
     Column(
         modifier = modifier.width(IntrinsicSize.Max),
     ) {
-        HeadlineMediumText(
+        Text(
             text = name,
             color = textColor,
+            style = MaterialTheme.typography.headlineMedium,
         )
         HorizontalDivider(
             modifier = Modifier
@@ -148,11 +151,12 @@ private fun EventDetailsSection(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Paddings.Small),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        TitleLargeText(
+        Text(
             text = title,
             color = textColor,
+            style = MaterialTheme.typography.titleLarge,
         )
         content()
     }
@@ -168,15 +172,17 @@ private fun EventImage(
     Column(
         modifier = modifier,
     ) {
-        TitleMediumText(
+        Text(
             text = title,
             color = textColor,
+            style = MaterialTheme.typography.titleMedium,
         )
         when (images) {
             null -> {
-                BodyMediumText(
+                Text(
                     text = "${title}画像がありませんでした。",
                     color = textColor,
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
             else -> {
@@ -184,7 +190,7 @@ private fun EventImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(Paddings.Small),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     images.forEach { (image, url) ->
                         Image(
