@@ -471,7 +471,7 @@ private fun DisplayCharacteristicWordNode(
                 origin = eventNodeCenterOffset.single(),
                 existingOffsets = nodeOffsetList,
                 eventNodeSize = eventNodeSizePx + characteristicWordNodeSizePx,
-                margin = 20f,
+                margin = 5f,
                 collisionMinDistance = characteristicWordNodeSizePx,
             )
         } else {
@@ -509,37 +509,37 @@ private const val Meiji5 = 1872
 fun generateCharacteristicWordNodeOffset(
     origin: Offset,
     existingOffsets: List<Offset>,
-    eventNodeSize: Float, // EventNodeの一辺のサイズ（px）
-    margin: Float, // EventNodeの外側に確保する余白
+    eventNodeSize: Float,      // EventNode 正方形の一辺（px）
+    margin: Float,             // EventNode 周囲にほしい余白
     collisionMinDistance: Float,
-    maxAttempts: Int = 1000,
+    maxAttempts: Int = 100,    // 1 リングあたりランダム試行回数
 ): Offset {
-    val halfEvent = eventNodeSize / 2
-    // 生成可能な候補の領域は、中心から ±(半分のサイズ + margin)
-    val halfOuter = halfEvent + margin
 
-    for (i in 0 until maxAttempts) {
-        // outerRect内からランダムな候補点を生成
-        val randomX = Random.nextDouble(from = -halfOuter.toDouble(), until = halfOuter.toDouble())
-        val randomY = Random.nextDouble(from = -halfOuter.toDouble(), until = halfOuter.toDouble())
-        val candidate = Offset(origin.x + randomX.toFloat(), origin.y + randomY.toFloat())
+    val halfEvent = eventNodeSize / 2f
+    var halfOuter = halfEvent + margin           // まずは “ぴったり外側” から開始
 
-        // 候補点がEventNode（中心originを持つ正方形）の内部に入っていないかチェック
-        if (candidate.x in (origin.x - halfEvent)..(origin.x + halfEvent) &&
-            candidate.y in (origin.y - halfEvent)..(origin.y + halfEvent)
-        ) {
-            continue
+    while (true) {                               // 成功するまで無限ループ
+        repeat(maxAttempts) {
+            // halfOuter 四角内でランダム生成
+            val randomX = Random.nextDouble(-halfOuter.toDouble(), halfOuter.toDouble())
+            val randomY = Random.nextDouble(-halfOuter.toDouble(), halfOuter.toDouble())
+            val candidate = Offset(origin.x + randomX.toFloat(), origin.y + randomY.toFloat())
+
+            // EventNode の正方形内部ならスキップ
+            if (candidate.x in (origin.x - halfEvent)..(origin.x + halfEvent) &&
+                candidate.y in (origin.y - halfEvent)..(origin.y + halfEvent)
+            ) return@repeat
+
+            // 既存ノードと衝突？
+            val colliding = existingOffsets.any {
+                distanceBetween(it, candidate) < collisionMinDistance
+            }
+            if (!colliding) return candidate     // 衝突なし ⇒ 採用
         }
 
-        // 既存のノードとの衝突判定
-        val isColliding = existingOffsets.any {
-            distanceBetween(it, candidate) < collisionMinDistance
-        }
-        if (isColliding) continue
-
-        return candidate
+        // ここに来るのは “maxAttempts 失敗した” ときだけ
+        halfOuter += margin                       // リングを 1 段拡張して再試行
     }
-    return Offset.Zero
 }
 
 private fun distanceBetween(offset1: Offset, offset2: Offset): Float {
