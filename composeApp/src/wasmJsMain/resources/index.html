@@ -2,9 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>research-system</title>
     <link type="text/css" rel="stylesheet" href="styles.css">
+    <script type="application/javascript">
+        // ズーム防止のためのJavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // ピンチズームを防止
+            document.addEventListener('gesturestart', function (e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('gesturechange', function (e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('gestureend', function (e) {
+                e.preventDefault();
+            });
+            
+            // ダブルタップズームを防止
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // キーボードズームを防止
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.keyCode == 61 || e.keyCode == 107 || e.keyCode == 173 || e.keyCode == 109 || e.keyCode == 187 || e.keyCode == 189)) {
+                    e.preventDefault();
+                }
+            });
+            
+            // マウスホイールズームを防止
+            document.addEventListener('wheel', function(e) {
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
     <script type="application/javascript" src="composeApp.js"></script>
 </head>
 <body>

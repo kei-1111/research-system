@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,10 +34,10 @@ import io.github.koalaplot.core.line.AreaPlot
 import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
-import io.github.koalaplot.core.xygraph.IntLinearAxisModel
 import io.github.koalaplot.core.xygraph.TickPosition
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
+import io.github.koalaplot.core.xygraph.rememberIntLinearAxisModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -136,6 +137,18 @@ private fun PopulationScreen(
     var yAxisLabelWidth by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
+    val xAxisModel = rememberIntLinearAxisModel(data.minOf { it.x }..data.maxOf { it.x })
+    val yAxisModel = rememberIntLinearAxisModel(0..350000)
+
+    val initialXViewRange = remember { xAxisModel.viewRange.value }
+    val initialYViewRange = remember { yAxisModel.viewRange.value }
+
+    val isZoomed by remember {
+        derivedStateOf {
+            xAxisModel.viewRange.value != initialXViewRange && yAxisModel.viewRange.value != initialYViewRange
+        }
+    }
+
     Surface(
         modifier = modifier,
     ) {
@@ -145,8 +158,8 @@ private fun PopulationScreen(
                 .padding(end = yAxisLabelWidth + 4.dp),
         ) {
             XYGraph(
-                xAxisModel = IntLinearAxisModel(data.minOf { it.x }..data.maxOf { it.x }),
-                yAxisModel = IntLinearAxisModel(0..350000),
+                xAxisModel = xAxisModel,
+                yAxisModel = yAxisModel,
                 xAxisStyle = rememberAxisStyle(
                     tickPosition = TickPosition.Inside
                 ),
@@ -177,6 +190,8 @@ private fun PopulationScreen(
                             },
                     )
                 },
+                zoomEnabled = true,
+                panEnabled = true,
             ) {
                 AreaPlot(
                     data = data,
@@ -190,45 +205,49 @@ private fun PopulationScreen(
                     ),
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     symbol = { point ->
-                        EventNodeCores(
-                            gregorianCalender = point.x,
-                            sendMeiji40BigFireOffset = {
-                                meiji40BigFireNode = meiji40BigFireNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendTaisyo5BigFireOffset = {
-                                taisyo5BigFireNode = taisyo5BigFireNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendSyowa9BigFireOffset = {
-                                syowa9BigFireNode = syowa9BigFireNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendYukawachoMergerOffset = {
-                                yukawachoMergerNode = yukawachoMergerNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendHakodateAirRaidOffset = {
-                                hakodateAirRaidNode = hakodateAirRaidNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendToyamaruTyphoonOffset = {
-                                toyamaruTyphoonNode = toyamaruTyphoonNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendZenikamesawamuraMergerOffset = {
-                                zenikamesawamuraMergerNode =
-                                    zenikamesawamuraMergerNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendKamedasiMergerOffset = {
-                                kamedasiMergerNode = kamedasiMergerNode.copy(centerOffset = it)
-                                nodeOffsetList.add(it)
-                            },
-                            sendSymbolOffset = {
-                                nodeOffsetList.add(it)
-                            },
-                        )
+                        if (!isZoomed) {
+                            EventNodeCores(
+                                gregorianCalender = point.x,
+                                sendMeiji40BigFireOffset = {
+                                    meiji40BigFireNode = meiji40BigFireNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendTaisyo5BigFireOffset = {
+                                    taisyo5BigFireNode = taisyo5BigFireNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendSyowa9BigFireOffset = {
+                                    syowa9BigFireNode = syowa9BigFireNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendYukawachoMergerOffset = {
+                                    yukawachoMergerNode = yukawachoMergerNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendHakodateAirRaidOffset = {
+                                    hakodateAirRaidNode = hakodateAirRaidNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendToyamaruTyphoonOffset = {
+                                    toyamaruTyphoonNode = toyamaruTyphoonNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendZenikamesawamuraMergerOffset = {
+                                    zenikamesawamuraMergerNode =
+                                        zenikamesawamuraMergerNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendKamedasiMergerOffset = {
+                                    kamedasiMergerNode = kamedasiMergerNode.copy(centerOffset = it)
+                                    nodeOffsetList.add(it)
+                                },
+                                sendSymbolOffset = {
+                                    nodeOffsetList.add(it)
+                                },
+                            )
+                        } else {
+                            Symbol()
+                        }
                     },
                 )
             }
@@ -244,23 +263,25 @@ private fun PopulationScreen(
                 .background(MaterialTheme.colorScheme.surface)
         )
 
-        DisplayCharacteristicWordNode(
-            nodeOffsetList = nodeOffsetList,
-            getPopulationRelatedEventNode = getPopulationRelatedEventNode,
-            onEvent = onEvent,
-        )
+        if (!isZoomed) {
+            DisplayCharacteristicWordNode(
+                nodeOffsetList = nodeOffsetList,
+                getPopulationRelatedEventNode = getPopulationRelatedEventNode,
+                onEvent = onEvent,
+            )
 
-        DisplayPopulationRelatedEventNode(
-            meiji40BigFireNode = meiji40BigFireNode,
-            taisyo5BigFireNode = taisyo5BigFireNode,
-            syowa9BigFireNode = syowa9BigFireNode,
-            yukawachoMergerNode = yukawachoMergerNode,
-            hakodateAirRaidNode = hakodateAirRaidNode,
-            toyamaruTyphoonNode = toyamaruTyphoonNode,
-            zenikamesawamuraMergerNode = zenikamesawamuraMergerNode,
-            kamedasiMergerNode = kamedasiMergerNode,
-            onEvent = onEvent,
-        )
+            DisplayPopulationRelatedEventNode(
+                meiji40BigFireNode = meiji40BigFireNode,
+                taisyo5BigFireNode = taisyo5BigFireNode,
+                syowa9BigFireNode = syowa9BigFireNode,
+                yukawachoMergerNode = yukawachoMergerNode,
+                hakodateAirRaidNode = hakodateAirRaidNode,
+                toyamaruTyphoonNode = toyamaruTyphoonNode,
+                zenikamesawamuraMergerNode = zenikamesawamuraMergerNode,
+                kamedasiMergerNode = kamedasiMergerNode,
+                onEvent = onEvent,
+            )
+        }
 
         if (uiState.isCharacteristicNodeHovered) {
             uiState.characteristicNodeException?.let { exceptionList ->
