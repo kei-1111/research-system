@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.example.project.data.historical_event.HistoricalEventsRepository
 import org.example.project.model.MajorEvent
+import org.example.project.model.YearGroup
 import org.example.project.ui.base.BaseViewModel
 
 class PopulationViewModel(
@@ -87,6 +88,24 @@ class PopulationViewModel(
             it.copy(
                 isShowEventNodeDetails = false,
                 showingEventNode = null,
+            )
+        }
+    }
+
+    fun onYearGroupClicked(yearGroup: YearGroup) {
+        updateUiState {
+            it.copy(
+                isShowYearGroupDetails = true,
+                showingYearGroup = yearGroup,
+            )
+        }
+    }
+
+    fun onYearGroupDetailsDismissed() {
+        updateUiState {
+            it.copy(
+                isShowYearGroupDetails = false,
+                showingYearGroup = null,
             )
         }
     }

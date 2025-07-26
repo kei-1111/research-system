@@ -10,6 +10,8 @@ data class PopulationUiState(
     val characteristicNodeException: List<CharacteristicNodeException>? = null,
     val isShowEventNodeDetails: Boolean = false,
     val showingEventNode: MajorEvent? = null,
+    val isShowYearGroupDetails: Boolean = false,
+    val showingYearGroup: YearGroup? = null,
     val yearGroups: List<YearGroup> = emptyList(),
     val isLoadingYearGroups: Boolean = false,
     val yearGroupsError: String? = null,

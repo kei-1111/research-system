@@ -2,6 +2,7 @@ package org.example.project.ui.feature.population
 
 import androidx.compose.ui.geometry.Offset
 import org.example.project.model.MajorEvent
+import org.example.project.model.YearGroup
 import org.example.project.ui.base.UiEvent
 
 sealed interface PopulationUiEvent : UiEvent {
@@ -11,4 +12,6 @@ sealed interface PopulationUiEvent : UiEvent {
     ) : PopulationUiEvent
     data class OnEventNodeClicked(val clickedEvent: MajorEvent) : PopulationUiEvent
     data object OnEventNodeDetailsDismissed : PopulationUiEvent
+    data class OnYearGroupClicked(val yearGroup: YearGroup) : PopulationUiEvent
+    data object OnYearGroupDetailsDismissed : PopulationUiEvent
 }
