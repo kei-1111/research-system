@@ -2,14 +2,21 @@
 
 package org.example.project.ui.feature.population
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +30,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,6 +65,7 @@ import org.example.project.ktx.toDp
 import org.example.project.ktx.toPx
 import org.example.project.model.CharacteristicWordNode
 import org.example.project.model.EventNode
+import org.example.project.model.YearGroup
 import org.example.project.ui.base.LocalData
 import org.example.project.ui.component.ConnectCharacteristicNode
 import org.example.project.ui.component.EventAttachPosition
@@ -149,6 +158,24 @@ private fun PopulationScreen(
         }
     }
 
+    val xZoomRatio by remember {
+        derivedStateOf {
+            val initialWidth = initialXViewRange.endInclusive - initialXViewRange.start
+            val currentWidth =
+                xAxisModel.viewRange.value.endInclusive - xAxisModel.viewRange.value.start
+            if (currentWidth > 0) initialWidth.toFloat() / currentWidth.toFloat() else 1.0f
+        }
+    }
+
+    val yZoomRatio by remember {
+        derivedStateOf {
+            val initialHeight = initialYViewRange.endInclusive - initialYViewRange.start
+            val currentHeight =
+                yAxisModel.viewRange.value.endInclusive - yAxisModel.viewRange.value.start
+            if (currentHeight > 0) initialHeight.toFloat() / currentHeight.toFloat() else 1.0f
+        }
+    }
+
     Surface(
         modifier = modifier,
     ) {
@@ -221,15 +248,18 @@ private fun PopulationScreen(
                                     nodeOffsetList.add(it)
                                 },
                                 sendYukawachoMergerOffset = {
-                                    yukawachoMergerNode = yukawachoMergerNode.copy(centerOffset = it)
+                                    yukawachoMergerNode =
+                                        yukawachoMergerNode.copy(centerOffset = it)
                                     nodeOffsetList.add(it)
                                 },
                                 sendHakodateAirRaidOffset = {
-                                    hakodateAirRaidNode = hakodateAirRaidNode.copy(centerOffset = it)
+                                    hakodateAirRaidNode =
+                                        hakodateAirRaidNode.copy(centerOffset = it)
                                     nodeOffsetList.add(it)
                                 },
                                 sendToyamaruTyphoonOffset = {
-                                    toyamaruTyphoonNode = toyamaruTyphoonNode.copy(centerOffset = it)
+                                    toyamaruTyphoonNode =
+                                        toyamaruTyphoonNode.copy(centerOffset = it)
                                     nodeOffsetList.add(it)
                                 },
                                 sendZenikamesawamuraMergerOffset = {
@@ -246,22 +276,50 @@ private fun PopulationScreen(
                                 },
                             )
                         } else {
-                            Symbol()
+                            ZoomedYearSymbol(
+                                yearGroup = uiState.yearGroups.find { it.year == point.x },
+                                xZoomRatio = xZoomRatio,
+                            )
                         }
                     },
                 )
             }
         }
 
-        Text(
-            text = "函館市の人口推移",
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.headlineMedium,
+        Column(
             modifier = Modifier
                 .padding(top = 36.dp)
                 .padding(start = yAxisLabelWidth + 40.dp)
                 .background(MaterialTheme.colorScheme.surface)
-        )
+        ) {
+            Text(
+                text = "函館市の人口推移",
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            if (isZoomed) {
+                Text(
+                    text = "ズーム: X軸 ${kotlin.math.round(xZoomRatio * 10) / 10}倍、Y軸 ${
+                        kotlin.math.round(
+                            yZoomRatio * 10
+                        ) / 10
+                    }倍",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+            if (uiState.yearGroupsError != null) {
+                Text(
+                    text = "年グループの取得に失敗しました: ${uiState.yearGroupsError}",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
 
         if (!isZoomed) {
             DisplayCharacteristicWordNode(
@@ -559,6 +617,152 @@ fun generateCharacteristicWordNodeOffset(
 
         // ここに来るのは “maxAttempts 失敗した” ときだけ
         halfOuter += margin                       // リングを 1 段拡張して再試行
+    }
+}
+
+// ---------- LOD 設定 ----------
+private const val LOD1_THRESHOLD = 1.6f   // dot → 年＋代表語
+private const val LOD2_THRESHOLD = 3.2f   // 年＋全語
+private const val MAX_REPRESENT_WORD = 3  // LOD1 で表示する語数
+
+@OptIn(ExperimentalKoalaPlotApi::class)
+@Composable
+fun ZoomedYearSymbol(
+    yearGroup: YearGroup?,
+    xZoomRatio: Float,
+    modifier: Modifier = Modifier,
+) {
+    val lod by remember(xZoomRatio) {
+        derivedStateOf {
+            when {
+                xZoomRatio < LOD1_THRESHOLD -> 0
+                LOD1_THRESHOLD < xZoomRatio && xZoomRatio < LOD2_THRESHOLD -> 1
+                else -> 2
+            }
+        }
+    }
+
+    val density = LocalDensity.current
+    val isEvenYear = yearGroup?.year?.rem(2) == 1
+    val leaderLineHeight = 40.dp
+    val symbolSize = 8.dp
+    
+    var yearInfoBoxHeight by remember { mutableStateOf(50.dp) }
+
+    Column(
+        modifier = modifier
+            .offset(
+                y = if (isEvenYear) {
+                    // 上側配置: グラフ頂点から上方向にオフセット
+                    -(symbolSize + leaderLineHeight + yearInfoBoxHeight) / 2
+                } else {
+                    // 下側配置: グラフ頂点から下方向にオフセット
+                    (symbolSize + leaderLineHeight + yearInfoBoxHeight) / 2
+                }
+            ),
+        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+    ) {
+        if (isEvenYear) {
+            // 上側配置: YearInfo → Divider → Symbol (グラフ頂点に近い順)
+            YearInfoBox(
+                yearGroup = yearGroup,
+                lod = lod,
+                onHeightMeasured = { height ->
+                    yearInfoBoxHeight = with(density) { height.toDp() }
+                }
+            )
+            VerticalDivider(
+                modifier = Modifier.height(leaderLineHeight),
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Symbol(
+                shape = MaterialTheme.shapes.small,
+                size = symbolSize,
+                fillBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            )
+        } else {
+            // 下側配置: Symbol → Divider → YearInfo (グラフ頂点に近い順)
+            Symbol(
+                shape = MaterialTheme.shapes.small,
+                size = symbolSize,
+                fillBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            )
+            VerticalDivider(
+                modifier = Modifier.height(leaderLineHeight),
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            YearInfoBox(
+                yearGroup = yearGroup,
+                lod = lod,
+                onHeightMeasured = { height ->
+                    yearInfoBoxHeight = with(density) { height.toDp() }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun YearInfoBox(
+    yearGroup: YearGroup?,
+    lod: Int,
+    onHeightMeasured: (Int) -> Unit = {},
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(4.dp)
+            .animateContentSize()
+            .onGloballyPositioned { layoutCoordinates ->
+                onHeightMeasured(layoutCoordinates.size.height)
+            },
+    ) {
+        yearGroup?.let {
+            Text(
+                text = it.year.toString() + "年",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            when (lod) {
+                1 -> {
+                    // LOD1: 年＋代表語
+                    it.characteristicWords.take(MAX_REPRESENT_WORD).forEach { word ->
+                        Text(
+                            text = word,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+
+                2 -> {
+                    // LOD2: 年＋全語
+                    it.characteristicWords.forEach { word ->
+                        Text(
+                            text = word,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

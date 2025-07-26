@@ -21,24 +21,24 @@ class PopulationViewModel(
     }
 
     private fun loadHistoricalEvents() {
-        updateUiState { it.copy(isLoadingHistoricalEvents = true) }
+        updateUiState { it.copy(isLoadingYearGroups = true) }
 
         viewModelScope.launch {
-            historicalEventsRepository.getHistoricalEvents()
-                .onSuccess { events ->
+            historicalEventsRepository.getYearGroups()
+                .onSuccess { yearGroups ->
                     updateUiState {
                         it.copy(
-                            historicalEvents = events,
-                            isLoadingHistoricalEvents = false,
-                            historicalEventsError = null,
+                            yearGroups = yearGroups,
+                            isLoadingYearGroups = false,
+                            yearGroupsError = null,
                         )
                     }
                 }
                 .onFailure { error ->
                     updateUiState {
                         it.copy(
-                            isLoadingHistoricalEvents = false,
-                            historicalEventsError = error.message,
+                            isLoadingYearGroups = false,
+                            yearGroupsError = error.message,
                         )
                     }
                 }

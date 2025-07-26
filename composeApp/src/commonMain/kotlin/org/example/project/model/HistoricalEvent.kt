@@ -20,3 +20,10 @@ data class HistoricalEvent(
     val source5: String?,
     val source6: String?,
 )
+
+@Serializable
+data class YearGroup(
+    val year: Int,
+    val events: List<HistoricalEvent>,
+    val characteristicWords: List<String>
+)

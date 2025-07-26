@@ -1,7 +1,7 @@
 package org.example.project.data.historical_event
 
 import kotlinx.serialization.json.Json
-import org.example.project.model.HistoricalEvent
+import org.example.project.model.YearGroup
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import research_system.composeapp.generated.resources.Res
 
@@ -11,52 +11,28 @@ class HistoricalEventsRepository {
         coerceInputValues = true
     }
 
-    private var cachedEvents: List<HistoricalEvent>? = null
+    private var cachedYearGroups: List<YearGroup>? = null
 
     @OptIn(ExperimentalResourceApi::class)
-    private suspend fun loadEventsFromJson(): Result<List<HistoricalEvent>> {
+    private suspend fun loadYearGroupsFromJson(): Result<List<YearGroup>> {
         return try {
             val jsonString = Res.readBytes("files/historical_events.json").decodeToString()
-            val events = json.decodeFromString<List<HistoricalEvent>>(jsonString)
-            Result.success(events)
+            val yearGroups = json.decodeFromString<List<YearGroup>>(jsonString)
+            Result.success(yearGroups)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun getHistoricalEvents(): Result<List<HistoricalEvent>> {
-        return if (cachedEvents != null) {
-            Result.success(cachedEvents!!)
+    suspend fun getYearGroups(): Result<List<YearGroup>> {
+        return if (cachedYearGroups != null) {
+            Result.success(cachedYearGroups!!)
         } else {
-            loadEventsFromJson().also { result ->
-                result.onSuccess { events ->
-                    cachedEvents = events
+            loadYearGroupsFromJson().also { result ->
+                result.onSuccess { yearGroups ->
+                    cachedYearGroups = yearGroups
                 }
             }
-        }
-    }
-
-    suspend fun getHistoricalEventById(id: Int): Result<HistoricalEvent?> {
-        return getHistoricalEvents().map { events ->
-            events.find { it.id == id }
-        }
-    }
-
-    suspend fun getHistoricalEventsByYear(year: Int): Result<List<HistoricalEvent>> {
-        return getHistoricalEvents().map { events ->
-            events.filter { it.year == year }
-        }
-    }
-
-    suspend fun getHistoricalEventsByYearRange(startYear: Int, endYear: Int): Result<List<HistoricalEvent>> {
-        return getHistoricalEvents().map { events ->
-            events.filter { it.year in startYear..endYear }
-        }
-    }
-
-    suspend fun searchHistoricalEventsByText(query: String): Result<List<HistoricalEvent>> {
-        return getHistoricalEvents().map { events ->
-            events.filter { it.text.contains(query, ignoreCase = true) }
         }
     }
 }
