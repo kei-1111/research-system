@@ -3,28 +3,19 @@
 package org.example.project.ui.feature.population
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,9 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -88,6 +77,7 @@ import org.example.project.ui.component.EventDetails
 import org.example.project.ui.component.EventNodeCore
 import org.example.project.ui.component.EventNodeSize
 import org.example.project.ui.component.EventNodeView
+import org.example.project.ui.component.YearGroupDetailsView
 import org.example.project.ui.theme.EventColor
 import org.example.project.ui.theme.getEventColor
 import org.example.project.utils.toPointList
@@ -321,26 +311,6 @@ private fun PopulationScreen(
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            if (isZoomed) {
-                Text(
-                    text = "ズーム: X軸 ${kotlin.math.round(xZoomRatio * 10) / 10}倍、Y軸 ${
-                        kotlin.math.round(
-                            yZoomRatio * 10
-                        ) / 10
-                    }倍",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-            if (uiState.yearGroupsError != null) {
-                Text(
-                    text = "年グループの取得に失敗しました: ${uiState.yearGroupsError}",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
         }
 
         if (!isZoomed) {
@@ -395,7 +365,7 @@ private fun PopulationScreen(
 
         if (uiState.isShowYearGroupDetails) {
             uiState.showingYearGroup?.let { yearGroup ->
-                YearGroupDetails(
+                YearGroupDetailsView(
                     yearGroup = yearGroup,
                     onDismiss = { onEvent(PopulationUiEvent.OnYearGroupDetailsDismissed) },
                     modifier = Modifier.fillMaxSize(),
@@ -703,8 +673,8 @@ fun ZoomedYearSymbol(
     var yearInfoBoxHeight by remember { mutableStateOf(50.dp) }
 
     // 色を決定（EventNodeがある年は専用色、ない年はデフォルト色）
-    val dividerColor = eventColor?.emphasis ?: MaterialTheme.colorScheme.primary
-    val symbolColor = eventColor?.emphasis ?: MaterialTheme.colorScheme.primary
+    val dividerColor = eventColor?.base ?: MaterialTheme.colorScheme.onSurfaceVariant
+    val symbolColor = eventColor?.emphasis ?: MaterialTheme.colorScheme.onSurfaceVariant
 
     Column(
         modifier = modifier
@@ -736,14 +706,14 @@ fun ZoomedYearSymbol(
                 color = dividerColor,
             )
             Symbol(
-                shape = MaterialTheme.shapes.small,
+                shape = CircleShape,
                 size = symbolSize,
                 fillBrush = SolidColor(symbolColor),
             )
         } else {
             // 下側配置: Symbol → Divider → YearInfo (グラフ頂点に近い順)
             Symbol(
-                shape = MaterialTheme.shapes.small,
+                shape = CircleShape,
                 size = symbolSize,
                 fillBrush = SolidColor(symbolColor),
             )
@@ -835,176 +805,6 @@ private fun YearInfoBox(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun YearGroupDetails(
-    yearGroup: YearGroup,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier,
-        color = Color.Transparent,
-    ) {
-        Surface(
-            color = Color.Black.copy(alpha = 0.5f),
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable { onDismiss() }
-        ) {}
-
-        Surface(
-            modifier = Modifier
-                .padding(
-                    horizontal = 200.dp,
-                    vertical = 100.dp,
-                ),
-            shape = MaterialTheme.shapes.medium,
-            border = BorderStroke(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.primary,
-            ),
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(30.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-            ) {
-                YearGroupHeader(
-                    year = yearGroup.year,
-                    eventCount = yearGroup.events.size,
-                )
-                
-                YearGroupDetailsSection(
-                    title = "特徴語",
-                    content = {
-                        if (yearGroup.characteristicWords.isNotEmpty()) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                yearGroup.characteristicWords.forEach { word ->
-                                    Surface(
-                                        shape = MaterialTheme.shapes.small,
-                                        color = MaterialTheme.colorScheme.secondaryContainer,
-                                        modifier = Modifier.padding(2.dp)
-                                    ) {
-                                        Text(
-                                            text = word,
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                        )
-                                    }
-                                }
-                            }
-                        } else {
-                            Text(
-                                text = "特徴語が見つかりませんでした。",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                            )
-                        }
-                    },
-                )
-                
-                YearGroupDetailsSection(
-                    title = "歴史的イベント",
-                    content = {
-                        if (yearGroup.events.isNotEmpty()) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                            ) {
-                                yearGroup.events.forEach { event ->
-                                    Surface(
-                                        shape = MaterialTheme.shapes.small,
-                                        color = MaterialTheme.colorScheme.surfaceVariant,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Column(
-                                            modifier = Modifier.padding(12.dp),
-                                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                                        ) {
-                                            Text(
-                                                text = "${event.jyear}${event.month?.let { "年${it}月" } ?: "年"}${event.day?.let { "${it}日" } ?: ""}",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.primary,
-                                            )
-                                            Text(
-                                                text = event.text,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            Text(
-                                text = "この年のイベントが見つかりませんでした。",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                            )
-                        }
-                    },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun YearGroupHeader(
-    year: Int,
-    eventCount: Int,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.width(IntrinsicSize.Max),
-    ) {
-        Text(
-            text = "${year}年の記録",
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.headlineMedium,
-        )
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.medium),
-            color = MaterialTheme.colorScheme.primary,
-            thickness = 5.dp,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "イベント数: ${eventCount}件",
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Composable
-private fun YearGroupDetailsSection(
-    title: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.titleLarge,
-        )
-        content()
     }
 }
 
