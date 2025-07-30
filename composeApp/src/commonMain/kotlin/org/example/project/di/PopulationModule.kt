@@ -1,6 +1,6 @@
 package org.example.project.di
 
-import org.example.project.data.historical_event.HistoricalEventsRepository
+import org.example.project.data.historicalevent.HistoricalEventsRepository
 import org.example.project.ui.feature.population.PopulationViewModel
 import org.koin.dsl.module
 

@@ -1,3 +1,5 @@
+@file:Suppress("MaximumLineLength", "MaxLineLength")
+
 package org.example.project.data.population
 
 import org.example.project.model.CharacteristicWord

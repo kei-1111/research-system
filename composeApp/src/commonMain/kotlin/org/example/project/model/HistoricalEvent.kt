@@ -25,5 +25,5 @@ data class HistoricalEvent(
 data class YearGroup(
     val year: Int,
     val events: List<HistoricalEvent>,
-    val characteristicWords: List<String>
+    val characteristicWords: List<String>,
 )

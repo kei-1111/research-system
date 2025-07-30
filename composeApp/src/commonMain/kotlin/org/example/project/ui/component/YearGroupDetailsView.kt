@@ -30,6 +30,7 @@ import org.example.project.model.YearGroup
 import org.example.project.ui.theme.EventColor
 import org.example.project.ui.theme.getEventColor
 
+@Suppress("MagicNumber")
 private val eventNodeYears = mapOf(
     1907 to PopulationEventType.BigFire,
     1916 to PopulationEventType.BigFire,
@@ -41,6 +42,7 @@ private val eventNodeYears = mapOf(
     1973 to PopulationEventType.Merger,
 )
 
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 fun YearGroupDetailsView(
     yearGroup: YearGroup,
@@ -59,7 +61,7 @@ fun YearGroupDetailsView(
             color = Color.Black.copy(alpha = 0.5f),
             modifier = Modifier
                 .fillMaxSize()
-                .clickable { onDismiss() }
+                .clickable { onDismiss() },
         ) {}
 
         Surface(
@@ -102,7 +104,7 @@ fun YearGroupDetailsView(
                                     Surface(
                                         shape = MaterialTheme.shapes.small,
                                         color = eventColor?.base ?: MaterialTheme.colorScheme.secondaryContainer,
-                                        modifier = Modifier.padding(2.dp)
+                                        modifier = Modifier.padding(2.dp),
                                     ) {
                                         Text(
                                             text = word,
@@ -140,22 +142,25 @@ fun YearGroupDetailsView(
                                             .border(
                                                 width = 1.dp,
                                                 color = eventColor?.base ?: MaterialTheme.colorScheme.onSurfaceVariant,
-                                                shape = MaterialTheme.shapes.small
-                                            )
+                                                shape = MaterialTheme.shapes.small,
+                                            ),
                                     ) {
                                         Column(
                                             modifier = Modifier.padding(12.dp),
                                             verticalArrangement = Arrangement.spacedBy(4.dp),
                                         ) {
                                             Text(
-                                                text = "${event.jyear}${event.month?.let { "年${it}月" } ?: "年"}${event.day?.let { "${it}日" } ?: ""}",
+                                                text = "${event.jyear}${event.month?.let { "年${it}月" } ?: "年"}" +
+                                                    "${event.day?.let { "${it}日" } ?: ""}",
                                                 style = MaterialTheme.typography.labelMedium,
-                                                color = eventColor?.content ?: MaterialTheme.colorScheme.onSurfaceVariant,
+                                                color = eventColor?.content
+                                                    ?: MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
                                             Text(
                                                 text = event.text,
                                                 style = MaterialTheme.typography.bodyMedium,
-                                                color = eventColor?.content ?: MaterialTheme.colorScheme.onSurfaceVariant,
+                                                color = eventColor?.content
+                                                    ?: MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
                                         }
                                     }
@@ -179,8 +184,8 @@ fun YearGroupDetailsView(
 private fun YearGroupHeader(
     year: Int,
     eventCount: Int,
-    eventColor: EventColor? = null,
     modifier: Modifier = Modifier,
+    eventColor: EventColor? = null,
 ) {
     Column(
         modifier = modifier.width(IntrinsicSize.Max),

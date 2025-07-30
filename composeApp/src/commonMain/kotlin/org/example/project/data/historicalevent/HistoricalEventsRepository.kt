@@ -1,5 +1,8 @@
-package org.example.project.data.historical_event
 
+
+package org.example.project.data.historicalevent
+
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.example.project.model.YearGroup
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -19,7 +22,11 @@ class HistoricalEventsRepository {
             val jsonString = Res.readBytes("files/historical_events.json").decodeToString()
             val yearGroups = json.decodeFromString<List<YearGroup>>(jsonString)
             Result.success(yearGroups)
-        } catch (e: Exception) {
+        } catch (e: SerializationException) {
+            println("ERROR: JSON parsing failed - $e")
+            Result.failure(e)
+        } catch (e: IllegalArgumentException) {
+            println("ERROR: Invalid resource path - $e")
             Result.failure(e)
         }
     }

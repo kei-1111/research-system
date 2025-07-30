@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.example.project.data.historical_event.HistoricalEventsRepository
+import org.example.project.data.historicalevent.HistoricalEventsRepository
 import org.example.project.model.MajorEvent
 import org.example.project.model.YearGroup
 import org.example.project.ui.base.BaseViewModel
@@ -62,7 +62,7 @@ class PopulationViewModel(
         }
 
         autoUnHoverJob = viewModelScope.launch {
-            delay(3000)
+            delay(AutoHoverDelayMillis)
             updateUiState {
                 it.copy(
                     isCharacteristicNodeHovered = false,
@@ -108,5 +108,9 @@ class PopulationViewModel(
                 showingYearGroup = null,
             )
         }
+    }
+
+    private companion object {
+        const val AutoHoverDelayMillis = 3000L
     }
 }

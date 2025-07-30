@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package org.example.project.ui.component
 
 import androidx.compose.foundation.layout.Box
@@ -27,7 +29,8 @@ fun ConnectCharacteristicNode(
 ) {
     val eventColor = getEventColor(eventType)
 
-    val characteristicWordNodeBackgroundSizePx = (CharacteristicWordNodeBackgroundSize.toPx() * (1 + (0.5f * (eventNodeCenterOffset.size - 1))))
+    val characteristicWordNodeBackgroundSizePx =
+        (CharacteristicWordNodeBackgroundSize.toPx() * (1 + (0.5f * (eventNodeCenterOffset.size - 1))))
 
     var characteristicWordNodeWidthPx by remember { mutableFloatStateOf(0f) }
     var characteristicWordNodeHeightPx by remember { mutableFloatStateOf(0f) }

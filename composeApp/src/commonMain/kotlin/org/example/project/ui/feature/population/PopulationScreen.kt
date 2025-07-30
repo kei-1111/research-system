@@ -45,6 +45,7 @@ import io.github.koalaplot.core.line.AreaPlot
 import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
+import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.TickPosition
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
@@ -119,6 +120,7 @@ fun PopulationScreen() {
     }
 }
 
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 // ここでのOffsetは基本的に、ノードの中心とする。
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
@@ -155,7 +157,7 @@ private fun PopulationScreen(
     var yAxisLabelWidth by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
-    val xAxisModel = rememberIntLinearAxisModel(data.minOf { it.x }..data.maxOf { it.x })
+    val xAxisModel = rememberIntLinearAxisModel(data.minOf(Point<Int, Int>::x)..data.maxOf(Point<Int, Int>::x))
     val yAxisModel = rememberIntLinearAxisModel(0..350000)
 
     val initialXViewRange = remember { xAxisModel.viewRange.value }
@@ -176,15 +178,6 @@ private fun PopulationScreen(
         }
     }
 
-    val yZoomRatio by remember {
-        derivedStateOf {
-            val initialHeight = initialYViewRange.endInclusive - initialYViewRange.start
-            val currentHeight =
-                yAxisModel.viewRange.value.endInclusive - yAxisModel.viewRange.value.start
-            if (currentHeight > 0) initialHeight.toFloat() / currentHeight.toFloat() else 1.0f
-        }
-    }
-
     Surface(
         modifier = modifier,
     ) {
@@ -197,7 +190,7 @@ private fun PopulationScreen(
                 xAxisModel = xAxisModel,
                 yAxisModel = yAxisModel,
                 xAxisStyle = rememberAxisStyle(
-                    tickPosition = TickPosition.Inside
+                    tickPosition = TickPosition.Inside,
                 ),
                 yAxisStyle = rememberAxisStyle(
                     tickPosition = TickPosition.Inside,
@@ -302,13 +295,13 @@ private fun PopulationScreen(
             modifier = Modifier
                 .padding(top = 36.dp)
                 .padding(start = yAxisLabelWidth + 40.dp)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.surface),
         ) {
             Text(
                 text = "函館市の人口推移",
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -375,6 +368,7 @@ private fun PopulationScreen(
     }
 }
 
+@Suppress("LongParameterList", "LongMethod")
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 private fun EventNodeCores(
@@ -482,6 +476,7 @@ private fun EventNodeCores(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun DisplayPopulationRelatedEventNode(
     meiji40BigFireNode: EventNode,
@@ -528,6 +523,7 @@ private fun DisplayPopulationRelatedEventNode(
     )
 }
 
+@Suppress("MutableParams")
 @Composable
 private fun DisplayCharacteristicWordNode(
     nodeOffsetList: MutableList<Offset>,
@@ -567,7 +563,7 @@ private fun DisplayCharacteristicWordNode(
                         eventNodeCenterOffset.map {
                             calcMidpointOffset(
                                 it,
-                                characteristicWordNodeOffset
+                                characteristicWordNodeOffset,
                             )
                         },
                         characteristicWord.includeEvent.map { it.value },
@@ -598,20 +594,18 @@ private val eventNodeYears = mapOf(
     1973 to PopulationEventType.Merger,
 )
 
-
 fun generateCharacteristicWordNodeOffset(
     origin: Offset,
     existingOffsets: List<Offset>,
-    eventNodeSize: Float,      // EventNode 正方形の一辺（px）
-    margin: Float,             // EventNode 周囲にほしい余白
+    eventNodeSize: Float, // EventNode 正方形の一辺（px）
+    margin: Float, // EventNode 周囲にほしい余白
     collisionMinDistance: Float,
-    maxAttempts: Int = 100,    // 1 リングあたりランダム試行回数
+    maxAttempts: Int = 100, // 1 リングあたりランダム試行回数
 ): Offset {
-
     val halfEvent = eventNodeSize / 2f
-    var halfOuter = halfEvent + margin           // まずは “ぴったり外側” から開始
+    var halfOuter = halfEvent + margin // まずは “ぴったり外側” から開始
 
-    while (true) {                               // 成功するまで無限ループ
+    while (true) { // 成功するまで無限ループ
         repeat(maxAttempts) {
             // halfOuter 四角内でランダム生成
             val randomX = Random.nextDouble(-halfOuter.toDouble(), halfOuter.toDouble())
@@ -621,38 +615,41 @@ fun generateCharacteristicWordNodeOffset(
             // EventNode の正方形内部ならスキップ
             if (candidate.x in (origin.x - halfEvent)..(origin.x + halfEvent) &&
                 candidate.y in (origin.y - halfEvent)..(origin.y + halfEvent)
-            ) return@repeat
+            ) {
+                return@repeat
+            }
 
             // 既存ノードと衝突？
             val colliding = existingOffsets.any {
                 distanceBetween(it, candidate) < collisionMinDistance
             }
-            if (!colliding) return candidate     // 衝突なし ⇒ 採用
+            if (!colliding) return candidate // 衝突なし ⇒ 採用
         }
 
         // ここに来るのは “maxAttempts 失敗した” ときだけ
-        halfOuter += margin                       // リングを 1 段拡張して再試行
+        halfOuter += margin // リングを 1 段拡張して再試行
     }
 }
 
 // ---------- LOD 設定 ----------
-private const val LOD1_THRESHOLD = 1.6f   // dot → 年＋代表語
-private const val LOD2_THRESHOLD = 3.2f   // 年＋全語
-private const val MAX_REPRESENT_WORD = 3  // LOD1 で表示する語数
+private const val Lod1Threshold = 1.6f // dot → 年＋代表語
+private const val Lod2Threshold = 3.2f // 年＋全語
+private const val MaxRepresentWord = 3 // LOD1 で表示する語数
 
+@Suppress("LongMethod")
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 fun ZoomedYearSymbol(
     yearGroup: YearGroup?,
     xZoomRatio: Float,
-    onYearGroupClick: (YearGroup) -> Unit = {},
     modifier: Modifier = Modifier,
+    onYearGroupClick: (YearGroup) -> Unit = {},
 ) {
     val lod by remember(xZoomRatio) {
         derivedStateOf {
             when {
-                xZoomRatio < LOD1_THRESHOLD -> 0
-                LOD1_THRESHOLD < xZoomRatio && xZoomRatio < LOD2_THRESHOLD -> 1
+                xZoomRatio < Lod1Threshold -> 0
+                Lod1Threshold < xZoomRatio && xZoomRatio < Lod2Threshold -> 1
                 else -> 2
             }
         }
@@ -669,7 +666,7 @@ fun ZoomedYearSymbol(
     val isEvenYear = yearGroup?.year?.rem(2) == 1
     val leaderLineHeight = 40.dp
     val symbolSize = 8.dp
-    
+
     var yearInfoBoxHeight by remember { mutableStateOf(50.dp) }
 
     // 色を決定（EventNodeがある年は専用色、ない年はデフォルト色）
@@ -685,7 +682,7 @@ fun ZoomedYearSymbol(
                 } else {
                     // 下側配置: グラフ頂点から下方向にオフセット
                     (symbolSize + leaderLineHeight + yearInfoBoxHeight) / 2
-                }
+                },
             ),
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
     ) {
@@ -695,7 +692,7 @@ fun ZoomedYearSymbol(
                 yearGroup = yearGroup,
                 lod = lod,
                 eventColor = eventColor,
-                onHeightMeasured = { height ->
+                onHeightMeasure = { height ->
                     yearInfoBoxHeight = with(density) { height.toDp() }
                 },
                 onYearGroupClick = onYearGroupClick,
@@ -726,7 +723,7 @@ fun ZoomedYearSymbol(
                 yearGroup = yearGroup,
                 lod = lod,
                 eventColor = eventColor,
-                onHeightMeasured = { height ->
+                onHeightMeasure = { height ->
                     yearInfoBoxHeight = with(density) { height.toDp() }
                 },
                 onYearGroupClick = onYearGroupClick,
@@ -739,24 +736,24 @@ fun ZoomedYearSymbol(
 private fun YearInfoBox(
     yearGroup: YearGroup?,
     lod: Int,
-    eventColor: EventColor? = null,
-    onHeightMeasured: (Int) -> Unit = {},
-    onYearGroupClick: (YearGroup) -> Unit = {},
     modifier: Modifier = Modifier,
+    eventColor: EventColor? = null,
+    onHeightMeasure: (Int) -> Unit = {},
+    onYearGroupClick: (YearGroup) -> Unit = {},
 ) {
     Box(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
                 )
                 .border(
                     width = 1.dp,
                     color = eventColor?.emphasis ?: MaterialTheme.colorScheme.onSurface,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
                 )
                 .clickable {
                     yearGroup?.let { onYearGroupClick(it) }
@@ -764,7 +761,7 @@ private fun YearInfoBox(
                 .padding(4.dp)
                 .animateContentSize()
                 .onGloballyPositioned { layoutCoordinates ->
-                    onHeightMeasured(layoutCoordinates.size.height)
+                    onHeightMeasure(layoutCoordinates.size.height)
                 },
         ) {
             yearGroup?.let {
@@ -779,7 +776,7 @@ private fun YearInfoBox(
                 when (lod) {
                     1 -> {
                         // LOD1: 年＋代表語
-                        it.characteristicWords.take(MAX_REPRESENT_WORD).forEach { word ->
+                        it.characteristicWords.take(MaxRepresentWord).forEach { word ->
                             Text(
                                 text = word,
                                 style = MaterialTheme.typography.labelSmall,

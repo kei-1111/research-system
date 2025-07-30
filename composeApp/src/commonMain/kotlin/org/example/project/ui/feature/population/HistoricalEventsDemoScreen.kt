@@ -1,7 +1,7 @@
 package org.example.project.ui.feature.population
 
-//@Composable
-//fun HistoricalEventDemoScreen() {
+// @Composable
+// fun HistoricalEventDemoScreen() {
 //    val viewModel: PopulationViewModel = koinViewModel()
 //    val uiState by viewModel.uiState.collectAsState()
 //
@@ -78,13 +78,13 @@ package org.example.project.ui.feature.population
 //            }
 //        }
 //    }
-//}
+// }
 //
-//@Composable
-//fun HistoricalEventItem(
+// @Composable
+// fun HistoricalEventItem(
 //    historicalEvent: HistoricalEvent,
 //    modifier: Modifier = Modifier,
-//) {
+// ) {
 //    Column {
 //        Row(
 //            modifier = modifier,
@@ -152,4 +152,4 @@ package org.example.project.ui.feature.population
 //            text = historicalEvent.text,
 //        )
 //    }
-//}
+// }

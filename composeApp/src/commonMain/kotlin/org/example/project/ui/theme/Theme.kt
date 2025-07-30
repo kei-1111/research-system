@@ -1,7 +1,6 @@
 package org.example.project.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
@@ -45,11 +44,13 @@ private val lightScheme = lightColorScheme(
 
 @Composable
 fun ResearchSystemTheme(
-    content: @Composable() () -> Unit
+    content:
+    @Composable()
+    () -> Unit,
 ) {
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = lightScheme,
         typography = Typography(),
-        content = content
+        content = content,
     )
 }
