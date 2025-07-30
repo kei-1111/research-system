@@ -4,4 +4,43 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    /* ブラウザズームを防止 */
+    touch-action: manipulation;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    text-size-adjust: none;
+    /* 固定ズームレベル */
+    zoom: 1.0;
+    -moz-transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+}
+
+/* ダブルタップでのズームを防止 */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* すべての要素でズームを無効化 */
+    touch-action: manipulation;
+}
+
+/* iOS Safariでの追加制御 */
+@supports (-webkit-touch-callout: none) {
+    html {
+        -webkit-text-size-adjust: none;
+    }
+}
+
+/* 入力フィールドのズームを防止 */
+input, textarea, select {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
