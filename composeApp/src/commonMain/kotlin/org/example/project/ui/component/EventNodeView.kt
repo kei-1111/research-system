@@ -23,7 +23,7 @@ import org.example.project.ui.theme.Shapes
 import org.example.project.ui.theme.getEventColor
 import org.jetbrains.compose.resources.painterResource
 
-val EventNodeSize = 100.dp
+val EventNodeSize = 150.dp
 
 @Composable
 fun EventNodeView(

@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -301,7 +302,10 @@ private fun PopulationScreen(
                 text = "函館市の人口推移",
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 8.dp)
+                    .padding(vertical = 4.dp),
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -331,7 +335,7 @@ private fun PopulationScreen(
                 exceptionList.map {
                     Surface(
                         modifier = Modifier
-                            .sizeIn(maxWidth = 250.dp)
+                            .sizeIn(maxWidth = 400.dp)
                             .offset(x = it.offset.x.toDp(), y = it.offset.y.toDp()),
                         shape = MaterialTheme.shapes.medium,
                         shadowElevation = 5.dp,
@@ -755,6 +759,7 @@ private fun YearInfoBox(
                     color = eventColor?.emphasis ?: MaterialTheme.colorScheme.onSurface,
                     shape = RoundedCornerShape(8.dp),
                 )
+                .clip(RoundedCornerShape(8.dp))
                 .clickable {
                     yearGroup?.let { onYearGroupClick(it) }
                 }

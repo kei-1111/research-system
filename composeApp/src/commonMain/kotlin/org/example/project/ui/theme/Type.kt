@@ -31,29 +31,38 @@ fun Typography() = Typography(
     headlineLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Bold,
-        fontSize = 48.sp,
-        lineHeight = 52.sp,
+        fontSize = 64.sp,
+        lineHeight = 68.sp,
     ),
     headlineMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Bold,
-        fontSize = 36.sp,
-        lineHeight = 40.sp,
+        fontSize = 48.sp,
+        lineHeight = 52.sp,
     ),
     titleLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Bold,
-        fontSize = 30.sp,
+        fontSize = 40.sp,
     ),
     titleMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Medium,
-        fontSize = 24.sp,
+        fontSize = 36.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 24.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Top,
+            trim = LineHeightStyle.Trim.Both,
+        ),
+    ),
+    bodySmall = TextStyle(
+        fontFamily = NotoSansJpFamily(),
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
             trim = LineHeightStyle.Trim.Both,
@@ -62,7 +71,7 @@ fun Typography() = Typography(
     labelLarge = TextStyle(
         fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Bold,
-        fontSize = 14.sp,
+        fontSize = 20.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
             trim = LineHeightStyle.Trim.Both,
@@ -70,8 +79,17 @@ fun Typography() = Typography(
     ),
     labelMedium = TextStyle(
         fontFamily = NotoSansJpFamily(),
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Top,
+            trim = LineHeightStyle.Trim.Both,
+        ),
+    ),
+    labelSmall = TextStyle(
+        fontFamily = NotoSansJpFamily(),
         fontWeight = FontWeight.Bold,
-        fontSize = 12.sp,
+        fontSize = 16.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Top,
             trim = LineHeightStyle.Trim.Both,

@@ -14,7 +14,6 @@ import androidx.compose.ui.geometry.Offset
 import kotlinx.collections.immutable.ImmutableList
 import org.example.project.ktx.calcLeftTopOffset
 import org.example.project.ktx.toDp
-import org.example.project.ktx.toPx
 import org.example.project.model.CharacteristicWordNode
 import org.example.project.model.EventType
 import org.example.project.ui.theme.getEventColor
@@ -28,9 +27,6 @@ fun ConnectCharacteristicNode(
     modifier: Modifier = Modifier,
 ) {
     val eventColor = getEventColor(eventType)
-
-    val characteristicWordNodeBackgroundSizePx =
-        (CharacteristicWordNodeBackgroundSize.toPx() * (1 + (0.5f * (eventNodeCenterOffset.size - 1))))
 
     var characteristicWordNodeWidthPx by remember { mutableFloatStateOf(0f) }
     var characteristicWordNodeHeightPx by remember { mutableFloatStateOf(0f) }
@@ -60,7 +56,11 @@ fun ConnectCharacteristicNode(
             onHover = onHover,
             sendWidthPx = { characteristicWordNodeWidthPx = it },
             sendHeightPx = { characteristicWordNodeHeightPx = it },
-            characteristicWordNodeBackgroundSize = characteristicWordNodeBackgroundSizePx.toDp(),
+            characteristicWordNodeLevel = when (eventNodeCenterOffset.size) {
+                1 -> CharacteristicWordNodeLevel.Level1
+                2 -> CharacteristicWordNodeLevel.Level2
+                else -> CharacteristicWordNodeLevel.Level3
+            },
             modifier = Modifier
                 .offset(x = leftTopOffset.x.toDp(), y = leftTopOffset.y.toDp()),
         )
