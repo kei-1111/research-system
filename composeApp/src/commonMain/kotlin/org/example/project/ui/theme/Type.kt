@@ -26,6 +26,7 @@ fun NotoSansJpFamily() = FontFamily(
     ),
 )
 
+@Suppress("LongMethod")
 @Composable
 fun Typography() = Typography(
     headlineLarge = TextStyle(
