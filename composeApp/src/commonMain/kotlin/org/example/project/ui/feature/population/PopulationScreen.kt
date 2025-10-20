@@ -736,6 +736,7 @@ fun ZoomedYearSymbol(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun YearInfoBox(
     yearGroup: YearGroup?,
